@@ -451,8 +451,8 @@ on fs
 
 # create filesystem if necessary
 service setup_fs /system/bin/setup_fs \
-            /dev/block/mmcblk0p19 \
-            /dev/block/mmcblk0p21
+            /dev/block/mmcblk0p21 \
+            /dev/block/mmcblk0p20
     class core
     user root
     group root
