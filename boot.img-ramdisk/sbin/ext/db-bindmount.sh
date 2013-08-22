@@ -41,7 +41,7 @@ rm -f /data/app/com.noshufou.android.su-*
 rm -f /data/app/com.koushikdutta.superuser-*
 rm -f /data/app/eu.chainfire.supersu-*
 
-mv -f /system/etc/Superuser.apk /system/app/
+cp -f /system/etc/Superuser.apk /system/app/
 mv -f /res/app/* /system/app/
 mv -f /res/etc/* /system/etc/
 mv -f /res/xbin/* /system/xbin/
