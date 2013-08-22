@@ -1,5 +1,7 @@
 #!/bin/sh
 
+find -name "*~" -exec rm -rf {} \;
+
 cd boot.img-ramdisk
 find . | cpio -o -H newc | gzip -9 > ../ramdisk.gz
 cd ..
