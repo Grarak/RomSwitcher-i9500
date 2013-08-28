@@ -1,5 +1,4 @@
 *~
-kernel.zip
 ramdisk.gz
-boot.img
+*.img
 .DS_Store

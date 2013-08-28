@@ -1,0 +1,74 @@
+#!/sbin/busybox sh
+
+cat << ENDCONFIG
+  <settingsTab name="LED">
+    <settingsPane description="The notification LED has two brightness modes, depending on the external brightness detected by the light sensor."
+		  name="Brightness">
+
+      <seekBar  description="LED brightness in low brightness environments."
+		name="Low light environment brightness"
+                action="generic /sys/class/sec/led/led_lowpower_current"
+                unit="" min="1" reversed="false" step="1" max="120"/>
+
+      <seekBar  description="LED brightness in high brightness environments."
+		name="Bright light environment brightness"
+                action="generic /sys/class/sec/led/led_highpower_current"
+                unit="" min="1" reversed="false" step="1" max="120"/>
+
+    </settingsPane>
+
+    <settingsPane description="Control the way the LED blinks."
+		  name="Blinking effect">
+
+      <checkbox  description="If disabled, the controller bypasses slope generation." 
+                name="Enable fading" 
+                action="generic01 /sys/class/sec/led/led_fade"
+                label="Enable LED fading"/>
+
+      <seekBar  description="Sets the time period of the rising slope."
+		name="Fade-in time period"
+                action="generic /sys/class/sec/led/led_fade_in_time"
+                unit="ms" min="0" reversed="false" step="50" max="1000"/>
+
+      <seekBar  description="Sets the time period of the falling slope."
+		name="Fade-out time period"
+                action="generic /sys/class/sec/led/led_fade_out_time"
+                unit="ms" min="0" reversed="false" step="50" max="2000"/>
+
+      <seekBar  description="Sets the time period of high retention at maximum PWM level"
+		name="Blink retention period"
+                action="generic /sys/class/sec/led/led_blink_retention"
+                unit="ms" min="0" reversed="false" step="50" max="2000"/>
+
+    </settingsPane>
+
+
+    <settingsPane description="Stock ROM notification controls only apply to the native notification framework, 3rd party apps are not affected."
+		  name="Stock ROM notification">      
+
+      <seekBar  description="Sets the time period of low retention at zero PWM level"
+		name="Blink delay period"
+                action="generic /sys/class/sec/led/led_blink_delay"
+                unit="ms" min="0" reversed="false" step="250" max="6000"/>
+
+      <seekBar  description=""
+		name="Red value"
+                action="generic /sys/class/sec/led/led_noti_r"
+                unit="" min="0" reversed="false" step="2" max="255"/>
+
+      <seekBar  description=""
+		name="Green value"
+                action="generic /sys/class/sec/led/led_noti_g"
+                unit="" min="0" reversed="false" step="2" max="255"/>
+
+      <seekBar  description=""
+		name="Blue value"
+                action="generic /sys/class/sec/led/led_noti_b"
+                unit="" min="0" reversed="false" step="2" max="255"/>
+
+      <button description="" name="" action="led 3" label="Apply notification"/>
+      <button description="" name="" action="led 0" label="Stop notification"/>
+
+    </settingsPane>
+  </settingsTab>
+ENDCONFIG

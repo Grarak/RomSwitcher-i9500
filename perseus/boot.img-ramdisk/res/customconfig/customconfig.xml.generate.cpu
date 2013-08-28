@@ -1,0 +1,72 @@
+#!/sbin/busybox sh
+
+cat << ENDCONFIG
+
+  <settingsTab name="CPU">
+
+    <settingsPane description="Apply the settings on boot only if the desired settings prove to be stable, else the device ends up in a boot-loop. If turned off, the displayed values do not correspond the current live values but the saved profile values, some inconsistencies may occur on applying." 
+                  name="CPU control switch">
+      <checkbox description="If enabled, the below settings will be applied at boot." 
+                name="Set CPU settings on boot" 
+                action="controlswitch CPU"
+                label="Set on boot"/>
+    </settingsPane>
+
+    <settingsPane description="CPUFreq scaling" name="CPU voltage control">
+      <seekbar description="Set the maximum freqency the CPU scales up to. Default: `expr \`cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq\` / 1000` MHz." 
+               name="CPU max frequency" 
+               action="cpugeneric /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq"
+               unit="KHz" reversed="false" step="100000"
+               min="`expr \`cat /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_min_freq\``" 
+               max="`expr \`cat /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq\``" />
+
+      <seekbar description="Set the minimum freqency the CPU scales down to. Default: `expr \`cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq\` / 1000` MHz." 
+               name="CPU min frequency" 
+               action="cpugeneric /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq"
+               unit="KHz" reversed="false" step="100000"
+               min="`expr \`cat /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_min_freq\``" 
+               max="`expr \`cat /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq\``" />
+
+    </settingsPane>    
+
+    <settingsPane description="IKS scaling" name="In-kernel-switcher frequency controls.">
+      <seekbar description="Set the maximum freqency of the little cores. Default: `expr \`cat /sys/devices/system/cpu/cpufreq/iks-cpufreq/CA7_max_freq\` / 1000` MHz." 
+               name="A7 max frequency"
+               action="cpugeneric /sys/devices/system/cpu/cpufreq/iks-cpufreq/CA7_max_freq"
+               unit="KHz" reversed="false" step="50000"
+               min="600000" 
+               max="750000" />
+    </settingsPane>
+
+    <settingsPane description="Decreasing voltage will lower power consumption of the CPU. Increasing it on overclocked frequencies improves stability. Too low voltage may cause instabilities and freezes. The Exynos 5410 overvolts by 75mV in cold temperatures if the CPU is at or below 20°C" 
+                  name="CPU voltage control">
+    </settingsPane>
+
+    <settingsPane description="" name="big cores">
+`
+while read FREQ UVOLT; do
+  if [ "$FREQ" == "750" ]; then
+    echo '</settingsPane> <settingsPane description="" name="LITTLE cores">'
+  fi
+
+  echo '<seekBar  description="Default voltage: '$UVOLT' µV"'
+
+  if [ $FREQ -lt 751 ]; then
+    echo  'name="'\`expr $FREQ \* 2\`' MHz step"'
+  else
+    echo  'name="'$FREQ' MHz step"'
+  fi
+
+  echo 'action="cpuvolt '${FREQ}'" unit=" µV" min="700000" reversed="false" step="6250" '
+
+  if [ $FREQ -lt 751 ]; then
+    echo 'max="1312500"/>'
+  else
+    echo 'max="1362500"/>'
+  fi
+
+done < /sys/devices/system/cpu/cpu0/cpufreq/UV_uV_table
+`
+    </settingsPane>
+  </settingsTab>
+ENDCONFIG
