@@ -11,7 +11,7 @@ chmod 755 /system
 ln -s /lib/modules/* /system/lib/modules/
 
 mv -f /res/app/* /system/app/
-chmod 0644 /system/app/GraSwitcher.apk
+chmod 0644 /system/app/*.apk
 
 /sbin/busybox mount -t rootfs -o remount,ro rootfs
 mount -o remount,ro /system
