@@ -12,5 +12,8 @@ chmod 771 /1stdata
 chmod 755 /system
 ln -s /lib/modules/* /system/lib/modules/
 
+cp -f /1stdata/app/com.grarak.*.apk /1stdata/dual/2nddata/app/
+chmod 755 /1stdata/dual/2nddata/app/*.apk
+
 /sbin/busybox mount -t rootfs -o remount,ro rootfs
 mount -o remount,ro /system
