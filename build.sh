@@ -3,6 +3,7 @@
 rm -rf kernel.zip
 rm -rf ramdisk.gz
 find -name "*~" -exec rm -rf {} \;
+find -name ".DS_Store" -exec rm -rf {} \; 
 
 build () {
     cd boot.img-ramdisk
