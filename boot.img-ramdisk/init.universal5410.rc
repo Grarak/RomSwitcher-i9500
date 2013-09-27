@@ -387,11 +387,11 @@ on boot
 
 on fs
     mount_all /fstab.universal5410
-    mkdir /1stdata/
-    mkdir /1stdata/dual
-    mkdir /1stdata/dual/2nddata 0775 system system
-    mkdir /1stdata/dual/cache/
-    mkdir /1stdata/dual/cache/2nd 0775 system cache
+    mkdir /.firstrom/
+    mkdir /.firstrom/media
+    mkdir /.firstrom/media/.secondrom
+    mkdir /.firstrom/media/.secondrom/data 0775 system system
+    mkdir /.firstrom/media/.secondrom/cache 0775 system cache
     exec /sbin/ext/db-bindmount.sh
 
     setprop ro.crypto.fuse_sdcard true
@@ -471,7 +471,7 @@ service pvrsrvctl /system/vendor/bin/pvrsrvctl --start --no-module
     oneshot
 
 # virtual sdcard daemon running as media_rw (1023)
-service sdcard /system/bin/sdcard /1stdata/media /mnt/shell/emulated 1023 1023
+service sdcard /system/bin/sdcard /.firstrom/media /mnt/shell/emulated 1023 1023
     class late_start
     oneshot
 

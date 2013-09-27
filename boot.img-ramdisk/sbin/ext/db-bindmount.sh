@@ -1,8 +1,8 @@
 #!/sbin/busybox sh
 
-mkdir -p /1stdata/dual/2nddata
-mount --bind /1stdata/dual/2nddata /data
-#mount --bind /1stdata/app /data/app
+mkdir -p /.firstrom/media/.secondrom/data
+mount --bind /.firstrom/media/.secondrom/data /data
+#mount --bind /.firstrom/media/.secondrom/data /data/app
 
 mount -o remount,rw /system
 /sbin/busybox mount -t rootfs -o remount,rw rootfs
@@ -12,8 +12,8 @@ chmod 771 /1stdata
 chmod 755 /system
 ln -s /lib/modules/* /system/lib/modules/
 
-cp -f /1stdata/app/com.grarak.*.apk /1stdata/dual/2nddata/app/
-chmod 755 /1stdata/dual/2nddata/app/*.apk
+cp -f /.firstrom/app/com.grarak.*.apk /.firstrom/media/.secondrom/data/app/
+chmod 755 /.firstrom/media/.secondrom/data/app/*.apk
 
 /sbin/busybox mount -t rootfs -o remount,ro rootfs
 mount -o remount,ro /system

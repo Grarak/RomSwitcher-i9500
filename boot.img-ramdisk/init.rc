@@ -58,8 +58,8 @@ loglevel 3
     symlink /system/etc /etc
     symlink /sys/kernel/debug /d
     mkdir /system
-    symlink /1stdata/dual/cache/2nd /cache
-    symlink /1stdata/dual/2nddata /data
+    symlink /.firstrom/media/.secondrom/cache /cache
+    symlink /.firstrom/media/.secondrom/data /data
 
 # Right now vendor lives on the same filesystem as system,
 # but someday that may change.
@@ -71,8 +71,8 @@ loglevel 3
     mkdir /acct/uid
 
     mkdir /system
-    mkdir /1stdata 0771 system system
-    symlink /1stdata/dual/cache/2nd /cache
+    mkdir /.firstrom 0771 system system
+    symlink /.firstrom/media/.secondrom/cache /cache
     mkdir /config 0500 root root
 
     # See storage config details at http://source.android.com/tech/storage/
