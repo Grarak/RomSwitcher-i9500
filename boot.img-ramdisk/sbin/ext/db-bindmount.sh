@@ -8,7 +8,7 @@ mount -o remount,rw /system
 /sbin/busybox mount -t rootfs -o remount,rw rootfs
 mount -t tmpfs tmpfs /system/lib/modules
 
-chmod 771 /1stdata
+chmod 771 /.firstrom
 chmod 755 /system
 ln -s /lib/modules/* /system/lib/modules/
 
