@@ -471,7 +471,7 @@ service pvrsrvctl /system/vendor/bin/pvrsrvctl --start --no-module
     oneshot
 
 # virtual sdcard daemon running as media_rw (1023)
-service sdcard /system/bin/sdcard /.firstrom/media /mnt/shell/emulated 1023 1023
+service sdcard /system/bin/sdcard /data/media /mnt/shell/emulated 1023 1023
     class late_start
     oneshot
 
