@@ -20,7 +20,6 @@ fi
 
 mv -v boot.img out/
 cd out
-adb push boot.img /sdcard/romswitcher/second.img
 zip -r kernel.zip META-INF boot.img
 mv -v kernel.zip ../
 cd ..
