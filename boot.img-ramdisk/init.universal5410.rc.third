@@ -389,11 +389,11 @@ on fs
     mount_all /fstab.universal5410
     mkdir /.firstrom/
     mkdir /.firstrom/media
-    mkdir /.firstrom/media/.secondrom
-    mkdir /.firstrom/media/.secondrom/data 0775 system system
-    mkdir /.firstrom/media/.secondrom/cache 0775 system cache
-    exec /sbin/ext/mount_system_second.sh
-    exec /sbin/ext/mount_second.sh
+    mkdir /.firstrom/media/.thirdrom
+    mkdir /.firstrom/media/.thirdrom/data 0775 system system
+    mkdir /.firstrom/media/.thirdrom/cache 0775 system cache
+    exec /sbin/ext/mount_system_third.sh
+    exec /sbin/ext/mount_third.sh
 
     setprop ro.crypto.fuse_sdcard true
 

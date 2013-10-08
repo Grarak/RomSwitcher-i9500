@@ -1,0 +1,31 @@
+#!/sbin/busybox sh
+
+cd /
+
+busybox mount -t proc proc /proc
+busybox mount -t sysfs sysfs /sys
+
+mkdir -p /dev/block
+mknod /dev/block/mmcblk0p21 b 259 13
+
+mkdir /data
+mount -t ext4 /dev/block/mmcblk0p21 /data
+
+ROM=`cat /data/media/.rom`
+
+if [ "$ROM" == "2" ]; then
+  mv -f /init.rc.third /init.rc
+  mv -f /init.universal5410.rc.third /init.universal5410.rc
+fi
+
+unmount -f /data
+
+chmod 755 /int.0
+chmod 644 /*.qcom
+chmod 644 /*.rc
+chmod 644 /*.prop
+
+rm /init
+mv -f /init.0 /init
+
+exec /init
