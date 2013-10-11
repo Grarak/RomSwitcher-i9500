@@ -392,8 +392,8 @@ on fs
     mkdir /.firstrom/media/.secondrom
     mkdir /.firstrom/media/.secondrom/data 0775 system system
     mkdir /.firstrom/media/.secondrom/cache 0775 system cache
-    exec /sbin/ext/mount_system_second.sh
-    exec /sbin/ext/mount_second.sh
+    exec /sbin/ext/mount_system.sh secondary
+    exec /sbin/ext/mount.sh secondary
 
     setprop ro.crypto.fuse_sdcard true
 
