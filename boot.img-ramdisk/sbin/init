@@ -13,9 +13,14 @@ mount -t ext4 /dev/block/mmcblk0p21 /data
 
 ROM=`cat /data/media/.rom`
 
-if [ "$ROM" == "2" ]; then
-  mv -f /init.rc.third /init.rc
-  mv -f /init.universal5410.rc.third /init.universal5410.rc
+if grep -q bootmode=2 /proc/cmdline ; then
+  mv -f /res/recovery/* /
+else
+  mv -f /res/boot/* /
+  if [ "$ROM" == "2" ]; then
+    mv -f /init.rc.third /init.rc
+    mv -f /init.universal5410.rc.third /init.universal5410.rc
+  fi
 fi
 
 unmount -f /data
