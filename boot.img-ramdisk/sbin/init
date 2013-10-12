@@ -23,7 +23,7 @@ else
   fi
 fi
 
-unmount -f /data
+umount -f /data
 
 chmod 755 /int.0
 chmod 644 /*.universal5410
