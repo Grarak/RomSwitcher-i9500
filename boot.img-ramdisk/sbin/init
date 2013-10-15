@@ -20,8 +20,8 @@ fi
 
 if grep -q bootmode=2 /proc/cmdline || [ -e /data/media/rebootrs ]; then
 	rm -f /data/media/rebootrs
+	mv -f /res/etc /
 	mv -f /res/recovery/* /
-	mv -f /res/ect /
 else
 	if [ "$ROM" == "0" ]; then
 		if [ -f /system/framework/twframework.jar ]; then
@@ -48,6 +48,7 @@ chmod 755 /int.0
 chmod 644 /*.universal5410
 chmod 644 /*.rc
 chmod 644 /*.prop
+chmod -R 755 /lib
 
 rm -f /init
 mv -f /init.0 /init

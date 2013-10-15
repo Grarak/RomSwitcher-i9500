@@ -7,7 +7,7 @@ find -name ".DS_Store" -exec rm -rf {} \;
 
 build () {
     cd boot.img-ramdisk
-    find . | cpio -o -H newc | gzip -9 > ../ramdisk.gz
+    find . | cpio -o -H newc | gzip > ../ramdisk.gz
     cd ..
     ./mkbootimg-$1 --kernel zImage --ramdisk ramdisk.gz --pagesize 2048 --cmdline "console=ttySAC2,115200n8 vmalloc=512M androidboot.console=ttySAC2" -o boot.img
 }
