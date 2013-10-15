@@ -11,13 +11,6 @@ chown 0.0 /system/xbin/su
 chmod 06755 /system/xbin/su
 ln -s /system/xbin/su /system/bin/su
 
-if [ ! -f /system/app/Superuser.apk ]; then
-	mv /res/Superuser.apk /system/app/Superuser.apk
-fi
-
-chown 0.0 /system/app/Superuser.apk
-chmod 0644 /system/app/Superuser.apk
-
 echo 2 > /sys/devices/system/cpu/sched_mc_power_savings
 
 for i in /sys/block/*/queue/add_random;do echo 0 > $i;done
@@ -40,7 +33,7 @@ echo 70 > /sys/class/devfreq/exynos5-busfreq-mif/time_in_state/upthreshold
 
 copySynapse() {
 	cat /res/synapse/Synapse.apk > /system/app/Synapse.apk
-	chown 0.0 /system/app/Synapse.apk
+	chown 0.0 /system/app/Synapse.apkßß
 	chmod 644 /system/app/Synapse.apk
 }
 
@@ -66,6 +59,10 @@ ln -s /res/synapse/uci /sbin/uci
 if [ -d /system/etc/init.d ]; then
 	/sbin/busybox run-parts /system/etc/init.d
 fi;
+
+mount -t tmpfs tmpfs /system/lib/modules
+
+ln -s /lib/modules/* /system/lib/modules/
 
 /sbin/busybox mount -t rootfs -o remount,ro rootfs
 mount -o remount,ro /system
