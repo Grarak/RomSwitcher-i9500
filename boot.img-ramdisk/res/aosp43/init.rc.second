@@ -571,3 +571,8 @@ service mdnsd /system/bin/mdnsd
     socket mdnsd stream 0660 mdnsr inet
     disabled
     oneshot
+
+service perseusinit /sbin/perseus.sh
+    class core
+    user root
+    oneshot

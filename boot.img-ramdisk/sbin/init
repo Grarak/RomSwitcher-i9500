@@ -6,31 +6,49 @@ busybox mount -t proc proc /proc
 busybox mount -t sysfs sysfs /sys
 
 mkdir -p /dev/block
+mknod /dev/block/mmcblk0p20 b 259 12
 mknod /dev/block/mmcblk0p21 b 259 13
 
-mkdir /data
+mount -t ext4 /dev/block/mmcblk0p20 /system
 mount -t ext4 /dev/block/mmcblk0p21 /data
 
 ROM=`cat /data/media/.rom`
 
-if grep -q bootmode=2 /proc/cmdline ; then
-  mv -f /res/recovery/* /
+if [ ! -e /data/media/.rom ]; then
+	ROM=0;
+fi
+
+if grep -q bootmode=2 /proc/cmdline || [ -e /data/media/rebootrs ]; then
+	rm -f /data/media/rebootrs
+	mv -f /res/recovery/* /
 else
-  mv -f /res/boot/* /
-  if [ "$ROM" == "2" ]; then
-    mv -f /init.rc.third /init.rc
-    mv -f /init.universal5410.rc.third /init.universal5410.rc
-  fi
+	if [ "$ROM" == "0" ]; then
+		if [ -f /system/framework/twframework.jar ]; then
+			mv -f /res/sec422/* /
+		else
+			mv -f /res/aosp43/* /
+		fi
+	else
+		mv -f /res/aosp43/* /
+		if [ "$ROM" == "1" ]; then
+			mv -f /init.rc.second /init.rc
+			mv -f /init.universal5410.rc.second /init.universal5410.rc
+		elif [ "$ROM" == "2" ]; then
+			mv -f /init.rc.third /init.rc
+			mv -f /init.universal5410.rc.third /init.universal5410.rc
+		fi
+	fi
 fi
 
 umount -f /data
+umount -f /system
 
 chmod 755 /int.0
 chmod 644 /*.universal5410
 chmod 644 /*.rc
 chmod 644 /*.prop
 
-rm /init
+rm -f /init
 mv -f /init.0 /init
 
 exec /init
