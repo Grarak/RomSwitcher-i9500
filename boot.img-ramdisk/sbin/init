@@ -41,7 +41,6 @@ else
 	fi
 fi
 
-
 umount -f /data
 umount -f /system
 
