@@ -2,8 +2,8 @@
 
 cd /
 
-busybox mount -t proc proc /proc
-busybox mount -t sysfs sysfs /sys
+mount -t proc proc /proc
+mount -t sysfs sysfs /sys
 
 mkdir -p /dev/block
 mknod /dev/block/mmcblk0p20 b 259 12
@@ -21,6 +21,7 @@ fi
 if grep -q bootmode=2 /proc/cmdline || [ -e /data/media/rebootrs ]; then
 	rm -f /data/media/rebootrs
 	mv -f /res/recovery/* /
+	mv -f /res/ect /
 else
 	if [ "$ROM" == "0" ]; then
 		if [ -f /system/framework/twframework.jar ]; then
@@ -39,6 +40,7 @@ else
 		fi
 	fi
 fi
+
 
 umount -f /data
 umount -f /system
