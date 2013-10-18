@@ -572,7 +572,7 @@ service mdnsd /system/bin/mdnsd
     disabled
     oneshot
 
-service perseusinit /sbin/perseus.sh
+service perseusinit /sbin/ext/perseus.sh
     class core
     user root
     oneshot

@@ -829,7 +829,7 @@ service secure_storage /system/bin/secure_storage_daemon
 on property:init.svc.prepare-ssdaemon=stopped
     start secure_storage
 
-service perseusinit /sbin/perseus.sh
+service perseusinit /sbin/ext/perseus.sh
     class core
     user root
     oneshot
