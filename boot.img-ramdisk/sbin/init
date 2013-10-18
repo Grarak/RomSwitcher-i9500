@@ -31,6 +31,7 @@ else
 		fi
 	else
 		mv -f /res/aosp43/* /
+		mv -f /fstab.universal5410.2 /fstab.universal5410
 		if [ "$ROM" == "1" ]; then
 			mv -f /init.rc.second /init.rc
 			mv -f /init.universal5410.rc.second /init.universal5410.rc
