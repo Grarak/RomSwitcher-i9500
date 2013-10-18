@@ -6,9 +6,12 @@ mount -t proc proc /proc
 mount -t sysfs sysfs /sys
 
 mkdir -p /dev/block
+mknod /dev/block/mmcblk0p19 b 259 11
 mknod /dev/block/mmcblk0p20 b 259 12
 mknod /dev/block/mmcblk0p21 b 259 13
 
+mkdir -p /cache
+mount -t ext4 /dev/block/mmcblk0p19 /cache
 mount -t ext4 /dev/block/mmcblk0p20 /system
 mount -t ext4 /dev/block/mmcblk0p21 /data
 
@@ -30,6 +33,12 @@ else
 			mv -f /res/aosp43/* /
 		fi
 	elif [ "$ROM" == "3" ]; then
+                if [ -f /cache/framework/twframework.jar ]; then
+			mv -f /res/sec422/* /
+		else
+			mv -f /res/aosp43/* /
+		fi
+		mv -f /fstab.universal5410.2 /fstab.universal5410
 		mv -f /init.universal5410.rc.fourth /init.universal5410.rc
 	else
 		mv -f /res/aosp43/* /
@@ -42,8 +51,9 @@ else
 	fi
 fi
 
-umount -f /data
+umount -f /cache
 umount -f /system
+umount -f /data
 
 chmod 755 /int.0
 chmod 644 /*.universal5410
