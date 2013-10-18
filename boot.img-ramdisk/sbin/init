@@ -29,6 +29,8 @@ else
 		else
 			mv -f /res/aosp43/* /
 		fi
+	elif [ "$ROM" == "3" ]; then
+		mv -f /init.universal5410.rc.fourth /init.universal5410.rc
 	else
 		mv -f /res/aosp43/* /
 		mv -f /fstab.universal5410.2 /fstab.universal5410

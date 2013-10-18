@@ -36,6 +36,10 @@ elif [ "$ROM" == "tertiary" ]; then
     mkdir -p /.firstrom/media/.thirdrom/data/app
     cp -f /.firstrom/app/com.grarak.*.apk /.firstrom/media/.thirdrom/data/app/
     chmod 755 /.firstrom/media/.thirdrom/data/app/*.apk
+elif [ "$ROM" == "quaternary" ]; then
+    mkdir -p /.firstrom/media/.fourthrom/data/app
+    cp -f /.firstrom/app/com.grarak.*.apk /.firstrom/media/.fourthrom/data/app/
+    chmod 755 /.firstrom/media/.fourthrom/data/app/*.apk
 fi
 
 /sbin/busybox mount -t rootfs -o remount,ro rootfs
