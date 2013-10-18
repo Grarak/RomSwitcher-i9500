@@ -2,16 +2,9 @@
 
 ROM=$1
 
-if [ "$ROM" == "secondary" ]; then
-    mkdir -p /.firstrom/media/.secondrom/data
-    mount --bind /.firstrom/media/.secondrom/data /data
-    mkdir -p /romswitcher
-    mkdir -p /.firstrom/media/0/romswitcher-tmp
-    mount --bind /.firstrom/media/0/romswitcher-tmp /romswitcher
-elif [ "$ROM" == "tertiary" ]; then
-    mkdir -p /.firstrom/media/.thirdrom/data
-    mount --bind /.firstrom/media/.thirdrom/data /data
-fi
+mkdir -p /romswitcher
+mkdir -p /.firstrom/media/0/romswitcher-tmp
+mount --bind /.firstrom/media/0/romswitcher-tmp /romswitcher
 
 mount -o remount,rw /system
 /sbin/busybox mount -t rootfs -o remount,rw rootfs

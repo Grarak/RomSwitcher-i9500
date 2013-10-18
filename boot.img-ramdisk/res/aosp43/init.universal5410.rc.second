@@ -386,14 +386,14 @@ on boot
     chmod 0666 /sys/class/leds/torch-sec1/brightness
 
 on fs
+    mkdir /.firstrom 0771 system system
     mount_all /fstab.universal5410
-    mkdir /.firstrom/
-    mkdir /.firstrom/media
+    exec /sbin/busybox mount -t ext4 -o rw /.firstrom/media/.secondrom/system.img /system
     mkdir /.firstrom/media/.secondrom
     mkdir /.firstrom/media/.secondrom/data 0775 system system
     mkdir /.firstrom/media/.secondrom/cache 0775 system cache
-    exec /sbin/ext/mount_system.sh secondary
-    exec /sbin/ext/mount.sh secondary
+    exec /sbin/busybox mount --bind /.firstrom/media/.secondrom/data /data
+    exec /sbin/busybox mount --bind /.firstrom/media/.secondrom/cache /cache
 
     setprop ro.crypto.fuse_sdcard true
 
