@@ -55,6 +55,29 @@ elif [ "$ROM" == "tertiary" ]; then
 
    sed 's|run_program("/sbin/busybox", "mount", "/data");|run_program("/sbin/mount_recovery.sh", "tertiary");|g' -i "$MOUNTPOINT"/rs/$updater_script_path || exit 1
 
+elif [ "$ROM" == "quaternary" ]; then
+   #### use mount script ####
+   sed 's|mount("ext4", "EMMC", "/dev/block/mmcblk0p20", "/system");|run_program("/sbin/mount_recovery.sh", "quaternary");|g' -i "$MOUNTPOINT"/rs/$updater_script_path || exit 1
+
+   sed 's|mount("ext4", "EMMC", "/dev/block/mmcblk0p21", "/data");|run_program("/sbin/mount_recovery.sh", "quaternary");|g' -i "$MOUNTPOINT"/rs/$updater_script_path || exit 1
+
+   ### also use script for formating ###
+   sed 's|format("ext4", "EMMC", "/dev/block/mmcblk0p20", "0", "/system");|run_program("/sbin/system_format.sh", "quaternary");|g' -i "$MOUNTPOINT"/rs/$updater_script_path || exit 1
+
+   sed 's|format("ext4", "EMMC", "/dev/block/mmcblk0p20");|run_program("/sbin/system_format.sh", "quaternary");|g' -i "$MOUNTPOINT"/rs/$updater_script_path || exit 1
+
+   sed 's|format("ext4", "EMMC", "/dev/block/mmcblk0p20", "0");|run_program("/sbin/system_format.sh", "quaternary");|g' -i "$MOUNTPOINT"/rs/$updater_script_path || exit 1
+
+   # get the kernel
+   sed 's|package_extract_file("boot.img", "/dev/block/mmcblk0p9");|#|g' -i "$MOUNTPOINT"/rs/$updater_script_path || exit 1
+
+   sed 's|write_raw_image("/tmp/boot.img", "/dev/block/mmcblk0p9")|#|g' -i "$MOUNTPOINT"/rs/$updater_script_path || exit 1
+
+   # busybox mount
+   sed 's|run_program("/sbin/busybox", "mount", "/system");|run_program("/sbin/mount_recovery.sh", "quaternary");|g' -i "$MOUNTPOINT"/rs/$updater_script_path || exit 1
+
+   sed 's|run_program("/sbin/busybox", "mount", "/data");|run_program("/sbin/mount_recovery.sh", "quaternary");|g' -i "$MOUNTPOINT"/rs/$updater_script_path || exit 1
+
 else
    exit 1
    echo "error update_mod.sh"

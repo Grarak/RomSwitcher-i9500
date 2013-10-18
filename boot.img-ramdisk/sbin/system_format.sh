@@ -32,6 +32,17 @@ elif [ "$1" == "tertiary" ] ; then
    $BB rm -rf /system/.*
    $BB mke2fs -F -T ext4 $third || exit 1
 
+elif [ "$1" == "quaternary" ] ; then
+   fourth=/dev/block/mmcblk0p19
+
+   $BB umount -f /system
+   $BB mkdir -p /system
+
+   $BB mount -t ext4 -o rw $fourth /system || exit 1
+   $BB rm -rf /system/*
+   $BB rm -rf /system/.*
+   $BB mke2fs -F -T ext4 $fourth || exit 1
+
 else
 
    exit 1

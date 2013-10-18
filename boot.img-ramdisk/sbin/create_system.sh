@@ -26,7 +26,6 @@ elif [ $FILESYSTEM == "tertiary" ]; then
       # create ext4 filesystem
       $BB mke2fs -F -T ext4 $third || exit 1
    fi
-
 fi
 
 exit 0
