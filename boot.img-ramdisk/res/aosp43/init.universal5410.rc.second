@@ -394,6 +394,7 @@ on fs
     mkdir /.firstrom/media/.secondrom/cache 0775 system cache
     exec /sbin/busybox mount --bind /.firstrom/media/.secondrom/data /data
     exec /sbin/busybox mount --bind /.firstrom/media/.secondrom/cache /cache
+    exec /sbin/ext/mount.sh secondary
 
     setprop ro.crypto.fuse_sdcard true
 
