@@ -10,9 +10,6 @@ mknod /dev/block/mmcblk0p19 b 259 11
 mknod /dev/block/mmcblk0p20 b 259 12
 mknod /dev/block/mmcblk0p21 b 259 13
 
-mkdir -p /cache
-mount -t ext4 /dev/block/mmcblk0p19 /cache
-mount -t ext4 /dev/block/mmcblk0p20 /system
 mount -t ext4 /dev/block/mmcblk0p21 /data
 
 ROM=`cat /data/media/.rom`
@@ -27,13 +24,15 @@ if grep -q bootmode=2 /proc/cmdline || [ -e /data/media/rebootrs ]; then
 	mv -f /res/recovery/* /
 else
 	if [ "$ROM" == "0" ]; then
+		mount -t ext4 /dev/block/mmcblk0p20 /system
 		if [ -f /system/framework/twframework.jar ]; then
 			mv -f /res/sec422/* /
 		else
 			mv -f /res/aosp43/* /
 		fi
 	elif [ "$ROM" == "3" ]; then
-                if [ -f /cache/framework/twframework.jar ]; then
+		mount -t ext4 /dev/block/mmcblk0p19 /system
+                if [ -f /system/framework/twframework.jar ]; then
 			mv -f /res/sec422/* /
 		else
 			mv -f /res/aosp43/* /
@@ -44,14 +43,19 @@ else
 		mv -f /res/aosp43/* /
 		mv -f /fstab.universal5410.2 /fstab.universal5410
 		if [ "$ROM" == "1" ]; then
+			mount -t ext4 /data/media/.secondrom/system.img /system
 			mv -f /init.universal5410.rc.second /init.universal5410.rc
 		elif [ "$ROM" == "2" ]; then
+			mount -t ext4 /data/media/.thirdrom/system.img /system
 			mv -f /init.universal5410.rc.third /init.universal5410.rc
 		fi
 	fi
 fi
 
-umount -f /cache
+if [ -f /system/framework/framework-pac.jar ]; then
+	sed 's|/system/framework/framework.jar:|/system/framework/framework.jar:/system/framework/framework-pac.jar:|' -i /init.rc
+fi
+
 umount -f /system
 umount -f /data
 
