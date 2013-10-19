@@ -429,9 +429,7 @@ on boot
 
 on fs
     mount_all /fstab.universal5410
-    mkdir /.firstrom 0771 system system
-    mount_all /fstab.universal5410
-    exec /sbin/busybox mount -t ext4 -o rw /dev/block/mmcblk0p19 /system
+    mkdir /.firstrom
     mkdir /.firstrom/media/.fourthrom
     mkdir /.firstrom/media/.fourthrom/data 0775 system system
     mkdir /.firstrom/media/.fourthrom/cache 0775 system cache

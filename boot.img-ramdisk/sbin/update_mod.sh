@@ -8,6 +8,7 @@ MOUNTPOINT=$2
 FILE=$3
 
 updater_script_path="META-INF/com/google/android/updater-script"
+updater_script_path_original="META-INF/com/google/android/updater-script-original"
 echo "mountpoint: $MOUNTPOINT"
 echo "file: $FILE"
 rm -rf $MOUNTPOINT/rs/*
@@ -19,6 +20,7 @@ if [ ! -s $FILE ] ; then
 fi
 
 unzip_binary -o $FILE $updater_script_path -d "$MOUNTPOINT"/rs || exit 1
+cp -f "$MOUNTPOINT"/rs/$updater_script_path /"$MOUNTPOINT"/rs/$updater_script_path_original || exit 1
 
 if [ "$ROM" == "secondary" ]; then
 
@@ -85,9 +87,9 @@ fi
 
 sed 's|run_program("/sbin/busybox", "mount", "/cache");|#|g' -i "$MOUNTPOINT"/rs/$updater_script_path || exit 1
 
-cp -f $FILE $MOUNTPOINT/rs
-cd $MOUNTPOINT/rs
+cd $MOUNTPOINT/rs || exit 1
 zip $FILE $updater_script_path || exit 1
+mv -f $updater_script_path_original $updater_script_path || exit 1
 cd /
 
 umount -f /system
