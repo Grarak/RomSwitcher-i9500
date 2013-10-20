@@ -95,17 +95,11 @@ else
 		mv -f /res/aosp43/* /
 		mv -f /fstab.universal5410.2 /fstab.universal5410
 		if [ "$ROM" == "1" ]; then
-			mount -t ext4 /data/media/.secondrom/system.img /system
 			mv -f /init.universal5410.rc.second /init.universal5410.rc
 		elif [ "$ROM" == "2" ]; then
-			mount -t ext4 /data/media/.thirdrom/system.img /system
 			mv -f /init.universal5410.rc.third /init.universal5410.rc
 		fi
 	fi
-fi
-
-if [ -f /system/framework/framework-pac.jar ]; then
-	sed 's|/system/framework/framework.jar:|/system/framework/framework.jar:/system/framework/framework-pac.jar:|' -i /init.rc
 fi
 
 umount -f /system
