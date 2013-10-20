@@ -72,6 +72,7 @@ ROM=`cat /data/media/.rom`
 if grep -q bootmode=2 /proc/cmdline || [ -e /data/media/rebootrs ]; then
 	rm -f /data/media/rebootrs
 	mv -f /res/etc /
+	mv -f /res/aosp43/* /
 	mv -f /res/recovery/* /
 else
 	if [ "$ROM" == "0" ]; then
