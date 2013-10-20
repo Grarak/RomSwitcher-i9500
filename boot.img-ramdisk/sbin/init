@@ -24,48 +24,50 @@ mknod /dev/block/loop0 b 7 0
 
 mount -t ext4 /dev/block/mmcblk0p21 /data
 
-[ -e /data/media/.rom ] || ROM=0
+if ! grep -q bootmode=2 /proc/cmdline || [ ! -e /data/media/rebootrs ]; then
 
-echo 50 > /sys/devices/virtual/timed_output/vibrator/enable
-KEY=`/sbin/ext/evkey -u -t 1000 /dev/input/event11`
+	echo 50 > /sys/devices/virtual/timed_output/vibrator/enable
+	KEY=`/sbin/ext/evkey -u -t 1000 /dev/input/event11`
 
-if [ "$KEY" == "172" ]; then    # HOME
-	KEYREC=`/sbin/ext/evkey -u -t 500 /dev/input/event11`
-	if [ "$KEYREC" == "172" ]; then
+	if [ "$KEY" == "172" ]; then    # HOME
+		KEYREC=`/sbin/ext/evkey -u -t 500 /dev/input/event11`
+		if [ "$KEYREC" == "172" ]; then
+			sleep 0.3
+			echo 300 > /sys/devices/virtual/timed_output/vibrator/enable
+			echo 1 > /data/media/rebootrs
+		else
+			echo 50 > /sys/devices/virtual/timed_output/vibrator/enable
+			echo 0 > /data/media/.rom
+		fi
+	elif [ "$KEY" == "116" ]; then  # POWER
 		sleep 0.3
-		echo 300 > /sys/devices/virtual/timed_output/vibrator/enable
-		echo 1 > /data/media/rebootrs
-	else
 		echo 50 > /sys/devices/virtual/timed_output/vibrator/enable
-		echo 0 > /data/media/.rom
+		sleep 0.3
+		echo 50 > /sys/devices/virtual/timed_output/vibrator/enable
+		echo 1 > /data/media/.rom
+	elif [ "$KEY" == "114" ]; then  # VOLUME DOWN
+		sleep 0.3
+		echo 50 > /sys/devices/virtual/timed_output/vibrator/enable
+		sleep 0.3
+		echo 50 > /sys/devices/virtual/timed_output/vibrator/enable
+		sleep 0.3
+		echo 50 > /sys/devices/virtual/timed_output/vibrator/enable
+		echo 2 > /data/media/.rom
+	elif [ "$KEY" == "115" ]; then  # VOLUME UP
+		sleep 0.3
+		echo 50 > /sys/devices/virtual/timed_output/vibrator/enable
+		sleep 0.3
+		echo 50 > /sys/devices/virtual/timed_output/vibrator/enable
+		sleep 0.3
+		echo 50 > /sys/devices/virtual/timed_output/vibrator/enable
+		sleep 0.3
+		echo 50 > /sys/devices/virtual/timed_output/vibrator/enable
+		echo 3 > /data/media/.rom
 	fi
-elif [ "$KEY" == "116" ]; then  # POWER
-	sleep 0.3
-	echo 50 > /sys/devices/virtual/timed_output/vibrator/enable
-	sleep 0.3
-	echo 50 > /sys/devices/virtual/timed_output/vibrator/enable
-	echo 1 > /data/media/.rom
-elif [ "$KEY" == "114" ]; then  # VOLUME DOWN
-	sleep 0.3
-	echo 50 > /sys/devices/virtual/timed_output/vibrator/enable
-	sleep 0.3
-	echo 50 > /sys/devices/virtual/timed_output/vibrator/enable
-	sleep 0.3
-	echo 50 > /sys/devices/virtual/timed_output/vibrator/enable
-	echo 2 > /data/media/.rom
-elif [ "$KEY" == "115" ]; then  # VOLUME UP
-	sleep 0.3
-	echo 50 > /sys/devices/virtual/timed_output/vibrator/enable
-	sleep 0.3
-	echo 50 > /sys/devices/virtual/timed_output/vibrator/enable
-	sleep 0.3
-	echo 50 > /sys/devices/virtual/timed_output/vibrator/enable
-	sleep 0.3
-	echo 50 > /sys/devices/virtual/timed_output/vibrator/enable
-	echo 3 > /data/media/.rom
 fi
 
 ROM=`cat /data/media/.rom`
+[ -e /data/media/.rom ] || ROM=0
 
 if grep -q bootmode=2 /proc/cmdline || [ -e /data/media/rebootrs ]; then
 	rm -f /data/media/rebootrs
