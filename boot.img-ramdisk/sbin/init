@@ -3,19 +3,64 @@
 cd /
 
 mount -t proc proc /proc
-mount -t sysfs sysfs /sys
+mount -t sysfs sys /sys
 
 mkdir -p /dev/block
-mknod /dev/block/mmcblk0p19 b 259 11
-mknod /dev/block/mmcblk0p20 b 259 12
-mknod /dev/block/mmcblk0p21 b 259 13
+mkdir /dev/input
+
+for i in 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14; do
+	event=$((0+$i))
+	minor=$((64+$i))
+	mknod /dev/input/event$event c 13 $minor
+done
+
+for i in 0 1 2; do
+	block=$((19+$i))
+	minor=$((11+$i))
+	mknod /dev/block/mmcblk0p$block b 259 $minor
+done
+
+mknod /dev/block/loop0 b 7 0
 
 mount -t ext4 /dev/block/mmcblk0p21 /data
 
 ROM=`cat /data/media/.rom`
 
-if [ ! -e /data/media/.rom ]; then
+[ -e /data/media/.rom ] || ROM=0
+
+echo "Let's go" > /dev/ttyprintk
+
+echo 50 > /sys/devices/virtual/timed_output/vibrator/enable
+KEY=`/sbin/ext/evkey -u -t 1000 /dev/input/event11`
+
+if [ "$KEY" == "172" ]; then    # HOME
+	sleep 0.3
+	echo 50 > /sys/devices/virtual/timed_output/vibrator/enable
 	ROM=0;
+elif [ "$KEY" == "116" ]; then  # POWER
+	sleep 0.3
+	echo 50 > /sys/devices/virtual/timed_output/vibrator/enable
+	sleep 0.3
+	echo 50 > /sys/devices/virtual/timed_output/vibrator/enable
+	ROM=1;
+elif [ "$KEY" == "114" ]; then  # VOLUME DOWN
+	sleep 0.3
+	echo 50 > /sys/devices/virtual/timed_output/vibrator/enable
+	sleep 0.3
+	echo 50 > /sys/devices/virtual/timed_output/vibrator/enable
+	sleep 0.3
+	echo 50 > /sys/devices/virtual/timed_output/vibrator/enable
+	ROM=2;
+elif [ "$KEY" == "115" ]; then  # VOLUME UP
+	sleep 0.3
+	echo 50 > /sys/devices/virtual/timed_output/vibrator/enable
+	sleep 0.3
+	echo 50 > /sys/devices/virtual/timed_output/vibrator/enable
+	sleep 0.3
+	echo 50 > /sys/devices/virtual/timed_output/vibrator/enable
+	sleep 0.3
+	echo 50 > /sys/devices/virtual/timed_output/vibrator/enable
+	ROM=3;
 fi
 
 if grep -q bootmode=2 /proc/cmdline || [ -e /data/media/rebootrs ]; then
