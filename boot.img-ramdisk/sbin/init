@@ -79,6 +79,9 @@ else
 		mount -t ext4 /dev/block/mmcblk0p20 /system
 		if [ -f /system/framework/twframework.jar ]; then
 			mv -f /res/sec422/* /
+			if [ -f /system/framework/framework-miui-res.apk ]; then
+				mv -f /res/miui422/* /
+			fi
 		else
 			mv -f /res/aosp43/* /
 		fi
@@ -86,6 +89,9 @@ else
 		mount -t ext4 /dev/block/mmcblk0p19 /system
                 if [ -f /system/framework/twframework.jar ]; then
 			mv -f /res/sec422/* /
+			if [ -f /system/framework/framework-miui-res.apk ]; then
+				mv -f /res/miui422/* /
+			fi
 		else
 			mv -f /res/aosp43/* /
 		fi
