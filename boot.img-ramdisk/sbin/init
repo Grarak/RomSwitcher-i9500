@@ -30,9 +30,9 @@ echo 50 > /sys/devices/virtual/timed_output/vibrator/enable
 KEY=`/sbin/ext/evkey -u -t 1000 /dev/input/event11`
 
 if [ "$KEY" == "172" ]; then    # HOME
-	sleep 0.3
-	KEYREC=`/sbin/ext/evkey -u -t 1000 /dev/input/event11`
+	KEYREC=`/sbin/ext/evkey -u -t 500 /dev/input/event11`
 	if [ "$KEYREC" == "172" ]; then
+		sleep 0.3
 		echo 300 > /sys/devices/virtual/timed_output/vibrator/enable
 		echo 1 > /data/media/rebootrs
 	else
