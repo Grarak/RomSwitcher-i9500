@@ -3,14 +3,6 @@
 mount -o remount,rw /system
 /sbin/busybox mount -t rootfs -o remount,rw rootfs
 
-if [ ! -f /system/xbin/su ]; then
-	mv /res/su /system/xbin/su
-fi
-
-chown 0.0 /system/xbin/su
-chmod 06755 /system/xbin/su
-ln -s /system/xbin/su /system/bin/su
-
 echo 2 > /sys/devices/system/cpu/sched_mc_power_savings
 
 for i in /sys/block/*/queue/add_random;do echo 0 > $i;done
@@ -30,24 +22,6 @@ echo 1 > /sys/class/misc/wolfson_control/switch_eq_speaker
 echo 480 > /sys/devices/platform/pvrsrvkm.0/sgx_dvfs_max_lock
 echo 50 > /sys/class/devfreq/exynos5-busfreq-mif/polling_interval
 echo 70 > /sys/class/devfreq/exynos5-busfreq-mif/time_in_state/upthreshold
-
-copySynapse() {
-	cat /res/synapse/Synapse.apk > /system/app/Synapse.apk
-	chown 0.0 /system/app/Synapse.apkßß
-	chmod 644 /system/app/Synapse.apk
-}
-
-if [ ! -f /data/nosynapse ]; then
-	if [  ! -f /system/app/Synapse.apk ]; then
-		copySynapse
-	else
-		R5=$(md5sum < /res/synapse/Synapse.apk | tr -d ' -')
-		S5=$(md5sum < /system/app/Synapse.apk | tr -d ' -')
-		if [ $R5 != $S5 ]; then
-			copySynapse
-		fi
-	fi
-fi
 
 mkdir -p /mnt/ntfs
 chmod 777 /mnt/ntfs
