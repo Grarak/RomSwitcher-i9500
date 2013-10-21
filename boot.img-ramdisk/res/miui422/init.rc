@@ -60,10 +60,6 @@ loglevel 3
     chown system system /proc/avc_msg
     chmod 0660 /proc/avc_msg
 
-# for internal isp camera memory allocation
-    chown media system /proc/cam_prepare
-    chmod 0664 /proc/cam_prepare
-
 # Backward compatibility
     symlink /system/etc /etc
     symlink /sys/kernel/debug /d
