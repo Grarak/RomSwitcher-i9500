@@ -24,100 +24,76 @@ mknod /dev/block/loop0 b 7 0
 
 mount -t ext4 /dev/block/mmcblk0p21 /data
 
-if ! grep -q bootmode=2 /proc/cmdline || [ ! -e /data/media/rebootrs ]; then
+out() {
+	umount -f /system
+	umount -f /data
 
-	echo 50 > /sys/devices/virtual/timed_output/vibrator/enable
-	KEY=`/sbin/ext/evkey -u -t 1000 /dev/input/event11`
+	chmod 755 /int.0
+	chmod 644 /*.universal5410
+	chmod 644 /*.rc
+	chmod 644 /*.prop
+	chmod -R 755 /lib
 
-	if [ "$KEY" == "172" ]; then    # HOME
-		KEYREC=`/sbin/ext/evkey -u -t 500 /dev/input/event11`
-		if [ "$KEYREC" == "172" ]; then
-			sleep 0.3
-			echo 300 > /sys/devices/virtual/timed_output/vibrator/enable
-			echo 1 > /data/media/rebootrs
-		else
-			echo 50 > /sys/devices/virtual/timed_output/vibrator/enable
-			echo 0 > /data/media/.rom
-		fi
-	elif [ "$KEY" == "116" ]; then  # POWER
-		sleep 0.3
-		echo 50 > /sys/devices/virtual/timed_output/vibrator/enable
-		sleep 0.3
-		echo 50 > /sys/devices/virtual/timed_output/vibrator/enable
-		echo 1 > /data/media/.rom
-	elif [ "$KEY" == "114" ]; then  # VOLUME DOWN
-		sleep 0.3
-		echo 50 > /sys/devices/virtual/timed_output/vibrator/enable
-		sleep 0.3
-		echo 50 > /sys/devices/virtual/timed_output/vibrator/enable
-		sleep 0.3
-		echo 50 > /sys/devices/virtual/timed_output/vibrator/enable
-		echo 2 > /data/media/.rom
-	elif [ "$KEY" == "115" ]; then  # VOLUME UP
-		sleep 0.3
-		echo 50 > /sys/devices/virtual/timed_output/vibrator/enable
-		sleep 0.3
-		echo 50 > /sys/devices/virtual/timed_output/vibrator/enable
-		sleep 0.3
-		echo 50 > /sys/devices/virtual/timed_output/vibrator/enable
-		sleep 0.3
-		echo 50 > /sys/devices/virtual/timed_output/vibrator/enable
-		echo 3 > /data/media/.rom
-	fi
-fi
+	rm -f /init
+	mv -f /init.0 /init
+
+	exec /init
+}
 
 ROM=`cat /data/media/.rom`
 [ -e /data/media/.rom ] || ROM=0
+
+mkdir -p /data/media/0/romswitcher-tmp
+if [ -e /data/media/0/romswitcher-tmp/manualboot ]; then
+	if [ -e /data/media/.nextboot ]; then
+		rm -f /data/media/.nextboot
+	else
+		mv -f /res/etc /
+		mv -f /res/aosp43/* /
+		mv -f /res/recovery/* /
+		mv -f /init.rc.2 /init.rc
+		out
+	fi
+fi
 
 if grep -q bootmode=2 /proc/cmdline || [ -e /data/media/rebootrs ]; then
 	rm -f /data/media/rebootrs
 	mv -f /res/etc /
 	mv -f /res/aosp43/* /
-	mv -f /res/recovery/* /
-else
-	if [ "$ROM" == "0" ]; then
-		mount -t ext4 /dev/block/mmcblk0p20 /system
-		if [ -f /system/framework/twframework.jar ]; then
-			mv -f /res/sec422/* /
-			if [ -f /system/framework/framework-miui-res.apk ]; then
+	mv -f /res/recovery/* /	
+	out
+fi
+
+if [ "$ROM" == "0" ]; then
+	mount -t ext4 /dev/block/mmcblk0p20 /system
+	if [ -f /system/framework/twframework.jar ]; then
+		mv -f /res/sec422/* /
+		if [ -f /system/framework/framework-miui-res.apk ]; then
 				mv -f /res/miui422/* /
-			fi
-		else
-			mv -f /res/aosp43/* /
 		fi
-	elif [ "$ROM" == "3" ]; then
-		mount -t ext4 /dev/block/mmcblk0p19 /system
-                if [ -f /system/framework/twframework.jar ]; then
-			mv -f /res/sec422/* /
-			if [ -f /system/framework/framework-miui-res.apk ]; then
-				mv -f /res/miui422/* /
-			fi
-		else
-			mv -f /res/aosp43/* /
-		fi
-		mv -f /fstab.universal5410.2 /fstab.universal5410
-		mv -f /init.universal5410.rc.fourth /init.universal5410.rc
 	else
 		mv -f /res/aosp43/* /
-		mv -f /fstab.universal5410.2 /fstab.universal5410
-		if [ "$ROM" == "1" ]; then
-			mv -f /init.universal5410.rc.second /init.universal5410.rc
-		elif [ "$ROM" == "2" ]; then
-			mv -f /init.universal5410.rc.third /init.universal5410.rc
+	fi
+elif [ "$ROM" == "3" ]; then
+	mount -t ext4 /dev/block/mmcblk0p19 /system
+	if [ -f /system/framework/twframework.jar ]; then
+		mv -f /res/sec422/* /
+		if [ -f /system/framework/framework-miui-res.apk ]; then
+			mv -f /res/miui422/* /
 		fi
+	else
+		mv -f /res/aosp43/* /
+	fi
+	mv -f /fstab.universal5410.2 /fstab.universal5410
+	mv -f /init.universal5410.rc.fourth /init.universal5410.rc
+else
+	mv -f /res/aosp43/* /
+	mv -f /fstab.universal5410.2 /fstab.universal5410
+	if [ "$ROM" == "1" ]; then
+		mv -f /init.universal5410.rc.second /init.universal5410.rc
+	elif [ "$ROM" == "2" ]; then
+		mv -f /init.universal5410.rc.third /init.universal5410.rc
 	fi
 fi
 
-umount -f /system
-umount -f /data
-
-chmod 755 /int.0
-chmod 644 /*.universal5410
-chmod 644 /*.rc
-chmod 644 /*.prop
-chmod -R 755 /lib
-
-rm -f /init
-mv -f /init.0 /init
-
-exec /init
+out
