@@ -43,6 +43,14 @@ out() {
 ROM=`cat /data/media/.rom`
 [ -e /data/media/.rom ] || ROM=0
 
+if grep -q bootmode=2 /proc/cmdline || [ -e /data/media/rebootrs ]; then
+	rm -f /data/media/rebootrs
+	mv -f /res/etc /
+	mv -f /res/aosp43/* /
+	mv -f /res/recovery/* /
+	out
+fi
+
 mkdir -p /data/media/0/romswitcher-tmp
 if [ -e /data/media/0/romswitcher-tmp/manualboot ]; then
 	if [ -e /data/media/.nextboot ]; then
@@ -54,14 +62,6 @@ if [ -e /data/media/0/romswitcher-tmp/manualboot ]; then
 		mv -f /init.rc.2 /init.rc
 		out
 	fi
-fi
-
-if grep -q bootmode=2 /proc/cmdline || [ -e /data/media/rebootrs ]; then
-	rm -f /data/media/rebootrs
-	mv -f /res/etc /
-	mv -f /res/aosp43/* /
-	mv -f /res/recovery/* /	
-	out
 fi
 
 if [ "$ROM" == "0" ]; then
