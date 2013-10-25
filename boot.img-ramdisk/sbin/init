@@ -64,6 +64,8 @@ if [ -e /data/media/0/romswitcher-tmp/manualboot ]; then
 	fi
 fi
 
+[ -e /data/media/.nextboot ] && rm -f /data/media/.nextboot
+
 if [ "$ROM" == "0" ]; then
 	mount -t ext4 /dev/block/mmcblk0p20 /system
 	if [ -f /system/framework/twframework.jar ]; then
