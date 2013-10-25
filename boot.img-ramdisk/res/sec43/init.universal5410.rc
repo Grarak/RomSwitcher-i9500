@@ -2,18 +2,7 @@ import init.universal5410.usb.rc
 import init.wifi.rc
 
 on init
-    start watchdogd
     
-     # For Absolute Persistence Partition
-    mkdir /persdata 0755 system system
-    mkdir /persdata/absolute 0750 system system
-
-    wait /dev/block/mmcblk0p17
-    mount ext4 /dev/block/mmcblk0p17 /persdata/absolute nosuid nodev barrier=1
-    chown system system /persdata
-    chmod 0755 /persdata
-    chown system system /persdata/absolute
-    chmod 0750 /persdata/absolute
 
     # See storage config details at http://source.android.com/tech/storage/
     mkdir /mnt/shell/emulated 0700 shell shell
@@ -58,7 +47,7 @@ on init
 
 # Vibetonz
     export VIBE_PIPE_PATH /dev/pipes
-    mkdir /dev/pipes 0771 shell shell
+    mkdir /dev/pipes 0771 system system
     restorecon /dev/pipes
 
 	symlink /dev/block/mmcblk0p8 /dev/block/param
@@ -141,8 +130,7 @@ on post-fs-data
 
 # SEAndroid Restore context for efs files
     restorecon -R /efs
-# SEAndroid: it should be set 1 to pass CTS
-    setsebool android_cts=1
+# Configure SEAndroid booleans and enforcing mode
     setsebool debugfs=1
 #]
 
@@ -165,7 +153,7 @@ on boot
 
 # Vibetonz
     chmod 0660 /dev/tspdrv
-    chown root shell /dev/tspdrv
+    chown system system /dev/tspdrv
 
 # Permissions for TouchScreen
     chown system radio /sys/class/sec/tsp/cmd
@@ -245,6 +233,7 @@ on boot
     chown system radio /sys/class/sensors/temphumidity_sensor/vendor
     chown system radio /sys/class/sensors/temphumidity_sensor/name
     chown system radio /sys/class/sensors/temphumidity_sensor/engine_ver
+    chown system radio /sys/class/sensors/temphumidity_sensor/engine_ver2
     chown system radio /sys/class/sensors/temphumidity_sensor/send_accuracy
 # SensorHub
     chown system radio /sys/class/sensors/ssp_sensor/enable
@@ -325,12 +314,12 @@ on boot
     chown nfc nfc /data/bcmnfc/param
 
 # PMS DVFS
-#    chown radio system /sys/power/cpufreq_table
-#    chown radio system /sys/power/cpufreq_max_limit
-#    chown radio system /sys/power/cpufreq_min_limit
-#    chmod 0660 /sys/power/cpufreq_table
-#    chmod 0660 /sys/power/cpufreq_max_limit
-#    chmod 0660 /sys/power/cpufreq_min_limit
+    chown radio system /sys/power/cpufreq_table
+    chown radio system /sys/power/cpufreq_max_limit
+    chown radio system /sys/power/cpufreq_min_limit
+    chmod 0660 /sys/power/cpufreq_table
+    chmod 0660 /sys/power/cpufreq_max_limit
+    chmod 0660 /sys/power/cpufreq_min_limit
     chown radio system /sys/class/devfreq/exynos5-busfreq-mif/en_monitoring
     chown radio system /sys/class/devfreq/exynos5-busfreq-int/en_monitoring
     chmod 0664 /sys/class/devfreq/exynos5-busfreq-mif/en_monitoring
@@ -365,38 +354,34 @@ on boot
     chown radio system /sys/devices/platform/exynos5-tmu/curr_temp
 
 # Quadrant Benchmark
-#    chown radio system /sys/class/thermal/thermal_zone0/boost_mode
+    chown radio system /sys/class/thermal/thermal_zone0/boost_mode
     chown radio system /sys/class/devfreq/exynos5-busfreq-mif/min_freq
     chown radio system /sys/class/devfreq/exynos5-busfreq-int/min_freq
     chown radio system /sys/devices/system/cpu/cpufreq/iks-cpufreq/min_freq
     chown radio system /sys/devices/system/cpu/cpufreq/iks-cpufreq/max_freq
     chown radio system /sys/devices/system/cpu/cpufreq/iks-cpufreq/freq_table
     chown radio system /sys/devices/system/cpu/cpufreq/iks-cpufreq/max_eagle_count
-#    chown radio system /sys/devices/platform/pvrsrvkm.0/sgx_dvfs_max_lock
+    chown radio system /sys/devices/platform/pvrsrvkm.0/sgx_dvfs_max_lock
     chown radio system /sys/devices/platform/pvrsrvkm.0/sgx_dvfs_min_lock
     chown radio system /sys/devices/platform/pvrsrvkm.0/sgx_dvfs_table
     chown radio system /sys/class/devfreq/exynos5-busfreq-mif/freq_table
     chown radio system /sys/class/devfreq/exynos5-busfreq-mif/min_freq
     chown radio system /sys/class/devfreq/exynos5-busfreq-mif/max_freq
     chown radio system /sys/devices/system/cpu/cpufreq/ondemand/up_threshold_h
-#    chmod 0664 /sys/class/thermal/thermal_zone0/boost_mode
+    chmod 0664 /sys/class/thermal/thermal_zone0/boost_mode
     chmod 0664 /sys/class/devfreq/exynos5-busfreq-mif/min_freq
     chmod 0664 /sys/class/devfreq/exynos5-busfreq-int/min_freq
     chmod 0664 /sys/devices/system/cpu/cpufreq/iks-cpufreq/min_freq
     chmod 0664 /sys/devices/system/cpu/cpufreq/iks-cpufreq/max_freq
     chmod 0664 /sys/devices/system/cpu/cpufreq/iks-cpufreq/freq_table
     chmod 0664 /sys/devices/system/cpu/cpufreq/iks-cpufreq/max_eagle_count
-#    chmod 0664 /sys/devices/platform/pvrsrvkm.0/sgx_dvfs_max_lock
+    chmod 0664 /sys/devices/platform/pvrsrvkm.0/sgx_dvfs_max_lock
     chmod 0664 /sys/devices/platform/pvrsrvkm.0/sgx_dvfs_min_lock
     chmod 0664 /sys/devices/platform/pvrsrvkm.0/sgx_dvfs_table
     chmod 0664 /sys/class/devfreq/exynos5-busfreq-mif/freq_table
     chmod 0664 /sys/class/devfreq/exynos5-busfreq-mif/min_freq
     chmod 0664 /sys/class/devfreq/exynos5-busfreq-mif/max_freq
     chmod 0664 /sys/devices/system/cpu/cpufreq/ondemand/up_threshold_h
-
-# game_mode
-    chown radio system /sys/devices/system/cpu/cpufreq/ondemand/game_mode
-    chmod 0664 /sys/devices/system/cpu/cpufreq/ondemand/game_mode
 
 # AMOLED Color Adjustment
     chown radio system /sys/class/power_supply/battery/temp
@@ -497,8 +482,9 @@ service setup_fs /system/bin/setup_fs \
 
 # Set watchdog timer to 30 seconds and pet it every 10 seconds to get a 20 second margin
 service watchdogd /sbin/watchdogd 10 20
-    class core
+	class core
     seclabel u:r:watchdogd:s0
+	disabled
 
 # 3D init
 service pvrsrvctl /system/vendor/bin/pvrsrvctl --start --no-module
@@ -527,7 +513,7 @@ service cpboot-daemon /sbin/cbd -d -p 13
 
 # AT Distributor for factory test
 service at_distributor /system/bin/at_distributor
-    class main
+    class late_start
     user root
     group radio misc log
 
@@ -553,8 +539,8 @@ group graphics
 # Vibetonz
 service immvibed /system/bin/immvibed
     class core
-    user shell
-    group shell
+    user system
+    group system
     oneshot
 
 service powersnd /system/bin/samsungpowersoundplay
@@ -574,8 +560,13 @@ service bugreport /system/bin/bugmailer.sh -v
 on property:ro.dumpstate.dmesg=1
     write /proc/sys/kernel/dmesg_restrict 0
 
-# Runtime Compcache
-service rtccinit /system/bin/rtcc_init -a 400M
+# Kick watchdogd if debug_level is low
+on property:ro.debug_level=0x4f4c
+	start watchdogd
+
+
+# RTCC
+service rtccd /system/bin/rtccd2 -a 500M
     class core
     user root
     oneshot
@@ -607,3 +598,22 @@ on property:ro.debuggable=1
 
 #WFD
     chmod 0666 /dev/graphics/fb1
+
+
+# bluetooth dhcp config
+service dhcpcd_bt-pan /system/bin/dhcpcd -ABKL
+    class main
+    disabled
+    oneshot
+
+service iprenew_bt-pan /system/bin/dhcpcd -n
+    class late_start
+    disabled
+    oneshot
+
+# To reduce power consumption when setupwizard is running
+on property:persist.sys.setupwizard=START
+        write /sys/power/cpufreq_max_limit 1000000
+
+on property:persist.sys.setupwizard=FINISH
+        write /sys/power/cpufreq_max_limit 1600000

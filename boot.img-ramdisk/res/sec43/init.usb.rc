@@ -8,6 +8,9 @@ on post-fs-data
     chmod 0660 /sys/class/android_usb/android0/f_mass_storage/lun/file
     chown system system /sys/class/android_usb/android0/f_rndis/ethaddr
     chmod 0660 /sys/class/android_usb/android0/f_rndis/ethaddr
+    chown system system /sys/class/android_usb/android0/usb30en
+    chmod 0660 /sys/class/android_usb/android0/usb30en
+
 
 # Used to disable USB when switching states
 on property:sys.usb.config=none
@@ -88,5 +91,4 @@ on property:sys.usb.config=accessory,audio_source,adb
 # Used to set USB configuration at boot and to switch the configuration
 # when changing the default configuration
 on property:persist.sys.usb.config=*
-    setprop sys.usb.config none
     setprop sys.usb.config ${persist.sys.usb.config}
