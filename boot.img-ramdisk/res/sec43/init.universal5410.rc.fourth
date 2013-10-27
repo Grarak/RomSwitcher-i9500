@@ -421,7 +421,7 @@ on fs
     mkdir /.firstrom/media/.fourthrom/cache 0775 system cache
     exec /sbin/busybox mount --bind /.firstrom/media/.fourthrom/data /data
     exec /sbin/busybox mount --bind /.firstrom/media/.fourthrom/cache /cache
-    exec /sbin/ext/mount.sh quaternary
+    exec /sbin/busybox sh /sbin/ext/mount.sh quaternary
 
     setprop ro.crypto.fuse_sdcard true
 
