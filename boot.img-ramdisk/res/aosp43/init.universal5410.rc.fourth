@@ -394,7 +394,7 @@ on fs
     mkdir /.firstrom/media/.fourthrom/cache 0775 system cache
     exec /sbin/busybox mount --bind /.firstrom/media/.fourthrom/data /data
     exec /sbin/busybox mount --bind /.firstrom/media/.fourthrom/cache /cache
-    exec /sbin/busybox sh /sbin/ext/mount.sh quaternary
+    exec /sbin/ext/mount.sh quaternary
 
     setprop ro.crypto.fuse_sdcard true
 
@@ -454,7 +454,7 @@ on fs
 # create filesystem if necessary
 service setup_fs /system/bin/setup_fs \
             /dev/block/mmcblk0p21 \
-            /dev/block/mmcblk0p20
+            /dev/block/mmcblk0p19
     class core
     user root
     group root
@@ -473,7 +473,7 @@ service pvrsrvctl /system/vendor/bin/pvrsrvctl --start --no-module
     oneshot
 
 # virtual sdcard daemon running as media_rw (1023)
-service sdcard /system/bin/sdcard /.firstrom/media /mnt/shell/emulated 1023 1023
+service sdcard /system/bin/sdcard /data/media /mnt/shell/emulated 1023 1023
     class late_start
     oneshot
 

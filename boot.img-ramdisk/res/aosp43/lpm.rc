@@ -26,7 +26,7 @@ on init
     #mount /tmp /tmp tmpfs
 
 on early-fs
-    mount ext4 /dev/block/mmcblk0p19 /system ro wait noatime
+    mount ext4 /dev/block/mmcblk0p20 /system ro wait noatime
     mount ext4 /dev/block/mmcblk0p3 /efs noatime nosuid nodev journal_async_commit
 
     mkdir /data/log 0777
