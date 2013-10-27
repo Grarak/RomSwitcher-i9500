@@ -30,13 +30,5 @@ mount -o mode=0777,gid=1000 -t tmpfs tmpfs /mnt/ntfs
 ln -s /res/synapse/uci /sbin/uci
 /sbin/uci
 
-if [ -d /system/etc/init.d ]; then
-	/sbin/busybox run-parts /system/etc/init.d
-fi;
-
-mount -t tmpfs tmpfs /system/lib/modules
-
-ln -s /lib/modules/* /system/lib/modules/
-
 /sbin/busybox mount -t rootfs -o remount,ro rootfs
 mount -o remount,ro /system
