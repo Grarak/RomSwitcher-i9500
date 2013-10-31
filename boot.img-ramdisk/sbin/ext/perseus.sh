@@ -27,6 +27,7 @@ echo 50 > /sys/class/devfreq/exynos5-busfreq-mif/polling_interval
 echo 70 > /sys/class/devfreq/exynos5-busfreq-mif/time_in_state/upthreshold
 
 /sbin/ext/uci
+ln -s /res/synapse/uci /sbin/uci
 
 mkdir -p /mnt/ntfs
 chmod 777 /mnt/ntfs
