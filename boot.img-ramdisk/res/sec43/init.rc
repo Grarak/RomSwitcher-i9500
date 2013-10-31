@@ -747,10 +747,6 @@ service installd /system/bin/installd
     socket installd stream 600 system system
     setprop installd.sdcard_manipulate_done 0
 
-service flash_recovery /system/etc/install-recovery.sh
-    class main
-    oneshot
-
 service racoon /system/bin/racoon
     class main
     socket racoon stream 600 system system
