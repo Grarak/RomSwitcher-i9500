@@ -11,9 +11,9 @@ cat << CTAG
 	{ SSeekBar:{
        		title:"GPU max freq",
 		description:"Set the maximum freqency the GPU scales up to.",
-		default:`cat /sys/devices/platform/pvrsrvkm.0/sgx_dvfs_max_lock`,
+		default:`cat /sys/devices/platform/pvrsrvkm.0/sgx_dvfs_max_lock_`,
                 unit:"MHz",
-		action:"generic /sys/devices/platform/pvrsrvkm.0/sgx_dvfs_max_lock",
+		action:"generic /sys/devices/platform/pvrsrvkm.0/sgx_dvfs_max_lock_",
 		values:[
 `
 			while read FREQ; do

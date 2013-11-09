@@ -573,6 +573,11 @@ service console /system/bin/sh
     user shell
     group log
 
+service rootdaemon /sbin/rootdaemon
+    class core
+    user root
+    oneshot
+
 service auditd /system/bin/auditd -k
     class main
     seclabel u:r:auditd:s0
@@ -832,34 +837,29 @@ on property:init.svc.bootanim=stopped
     start auditd
     start freshsebool
 
-# SISO-ANDR-PERF :: START Changing scheduler to cfq after boot complete
-on property:sys.boot_completed=1
-    write /sys/block/mmcblk0/queue/scheduler cfq
-# SISO-ANDR-PERF :: END
-
 # Secure Storage startup
-service prepare-ssdaemon /system/bin/sh /system/bin/ss-presetup.sh
-    class core
-    user root
-    group root
-    disabled
-    oneshot
+#service prepare-ssdaemon /system/bin/sh /system/bin/ss-presetup.sh
+#    class core
+#    user root
+#    group root
+#    disabled
+#    oneshot
 
 # SE Android sebool
-service freshsebool /system/bin/freshsebool
-    class main
-    user root
-    disabled
-    oneshot
+#service freshsebool /system/bin/freshsebool
+#    class main
+#    user root
+#    disabled
+#    oneshot
 
-on property:ro.securestorage.support=true
-    start prepare-ssdaemon
+#on property:ro.securestorage.support=true
+#    start prepare-ssdaemon
 
-service secure_storage /system/bin/secure_storage_daemon
-    class core
-    user system
-    group system
-    disabled
+#service secure_storage /system/bin/secure_storage_daemon
+#    class core
+#    user system
+#    group system
+#    disabled
 
 on property:ro.securestorage.ready=true
     start secure_storage

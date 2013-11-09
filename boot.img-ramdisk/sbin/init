@@ -33,6 +33,26 @@ out() {
 	exec /init
 }
 
+prepareKnox() {
+	BP="/system/build.prop"
+
+	if grep -q ro.config.tima=1 $BP; then
+		sed -i "s/ro.config.tima=1/ro.config.tima=0/g" $BP
+	fi
+
+	if grep -q ro.build.selinux=1 $bp; then
+		sed -i "s/ro.build.selinux=1/ro.build.selinux=0/g" $BP
+	fi
+
+	APKS="KNOXAgent.apk KNOXAgent.odex KnoxAttestationAgent.apk KnoxAttestationAgent.odex KNOXStore.apk KNOXStore.odex KNOXStub.apk ContainerAgent.apk ContainerAgent.odex"
+
+	for APK in $APKS; do
+		if [ -f /system/app/$APK ]; then
+			rm /system/app/$APK
+		fi
+	done
+}
+
 ROM=`cat /data/media/.rom`
 [ -e /data/media/.rom ] || ROM=0
 
@@ -63,6 +83,7 @@ if [ "$ROM" == "0" ]; then
 	mount -t ext4 /dev/block/mmcblk0p20 /system
 	if [ -f /system/framework/twframework.jar ]; then
 		mv -f /res/sec43/* /
+		prepareKnox
 	else
 		mv -f /res/aosp43/* /
 	fi
@@ -70,6 +91,7 @@ elif [ "$ROM" == "3" ]; then
 	mount -t ext4 /dev/block/mmcblk0p19 /system
 	if [ -f /system/framework/twframework.jar ]; then
 		mv -f /res/sec43/* /
+		prepareKnox
 	else
 		mv -f /res/aosp43/* /
 	fi

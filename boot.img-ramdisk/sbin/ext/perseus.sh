@@ -3,9 +3,6 @@
 mount -o remount,rw /system
 /sbin/busybox mount -t rootfs -o remount,rw rootfs
 
-pm disable com.sec.knox.seandroid
-setenforce 0
-
 echo 2 > /sys/devices/system/cpu/sched_mc_power_savings
 
 for i in /sys/block/*/queue/add_random;do echo 0 > $i;done
@@ -26,8 +23,8 @@ echo 480 > /sys/devices/platform/pvrsrvkm.0/sgx_dvfs_max_lock
 echo 50 > /sys/class/devfreq/exynos5-busfreq-mif/polling_interval
 echo 70 > /sys/class/devfreq/exynos5-busfreq-mif/time_in_state/upthreshold
 
-/sbin/ext/uci
-ln -s /res/synapse/uci /sbin/uci
+ln -s ../res/synapse/uci /sbin/uci
+/sbin/uci
 
 mkdir -p /mnt/ntfs
 chmod 777 /mnt/ntfs
@@ -36,10 +33,6 @@ mount -o mode=0777,gid=1000 -t tmpfs tmpfs /mnt/ntfs
 if [ -d /system/etc/init.d ]; then
 	/sbin/busybox run-parts /system/etc/init.d
 fi;
-
-/system/bin/setprop pm.sleep_mode 1
-/system/bin/setprop ro.ril.disable.power.collapse 0
-/system/bin/setprop ro.telephony.call_ring.delay 1000
 
 /sbin/busybox mount -t rootfs -o remount,ro rootfs
 mount -o remount,ro /system

@@ -42,5 +42,11 @@ elif [ "$ROM" == "quaternary" ]; then
     chmod 755 /.firstrom/media/.fourthrom/data/app/*.apk
 fi
 
+if [ ! -f /system/xbin/su ]; then
+cp /sbin/su.recovery /system/xbin/su
+    chmod 6755 /system/xbin/su
+    ln -sf /system/xbin/su /system/bin/su
+fi
+
 /sbin/busybox mount -t rootfs -o remount,ro rootfs
 mount -o remount,ro /system
