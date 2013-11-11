@@ -413,8 +413,8 @@ on boot
     chown system system /sys/class/timed_output/vibrator/enable
 
 on fs
-    mount_all /fstab.universal5410
     mkdir /.firstrom
+    mount_all /fstab.universal5410
     mkdir /.firstrom/media
     mkdir /.firstrom/media/.fourthrom
     mkdir /.firstrom/media/.fourthrom/data 0775 system system
@@ -503,7 +503,7 @@ service pvrsrvctl /system/vendor/bin/pvrsrvctl --start --no-module
     oneshot
 
 # virtual sdcard daemon running as media_rw (1023)
-service sdcard /system/bin/sdcard /.firstrom/media /mnt/shell/emulated 1023 1023
+service sdcard /system/bin/sdcard /data/media /mnt/shell/emulated 1023 1023
     class late_start
     oneshot
 

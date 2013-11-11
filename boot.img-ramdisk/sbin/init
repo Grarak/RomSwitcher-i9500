@@ -21,14 +21,11 @@ out() {
 	umount -f /system
 	umount -f /data
 
-	chmod 755 /int.0
+	chmod 755 /int
 	chmod 644 /*.universal5410
 	chmod 644 /*.rc
 	chmod 644 /*.prop
 	chmod -R 755 /lib
-
-	rm -f /init
-	mv -f /init.0 /init
 
 	exec /init
 }
