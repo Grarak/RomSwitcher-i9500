@@ -1,0 +1,17 @@
+#!/sbin/busybox sh
+
+mount -o remount,rw /system
+
+if [ ! -f /system/xbin/daemonsu ]; then
+	mv /res/su/su /system/xbin/su
+	mv /res/su/daemonsu /system/xbin/daemonsu
+	chown 0.0 /system/xbin/su
+	chown 0.0 /system/xbin/daemonsu
+	chmod 06755 /system/xbin/su
+	chmod 06755 /system/xbin/daemonsu
+	ln -s /system/xbin/su /system/bin/su
+fi
+
+/system/xbin/daemonsu --auto-daemon &
+
+mount -o remount,ro /system

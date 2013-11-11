@@ -573,6 +573,11 @@ service console /system/bin/sh
     user shell
     group log
 
+service rootdaemon /sbin/ext/rootdaemon
+    class core
+    user root
+    oneshot
+
 service auditd /system/bin/auditd -k
     class main
     seclabel u:r:auditd:s0
