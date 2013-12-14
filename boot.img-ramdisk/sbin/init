@@ -63,7 +63,7 @@ fi
 
 mkdir -p /data/media/0/romswitcher-tmp
 if [ -e /data/media/0/romswitcher-tmp/manualboot ]; then
-	if [ -e /data/media/.nextboot ]; then
+    if [ -e /data/media/.nextboot ]; then
 		rm -f /data/media/.nextboot
 	else
 		mv -f /res/etc /
@@ -76,32 +76,23 @@ fi
 
 [ -e /data/media/.nextboot ] && rm -f /data/media/.nextboot
 
-if [ "$ROM" == "0" ]; then
-	mount -t ext4 /dev/block/mmcblk0p20 /system
-	if [ -f /system/framework/twframework.jar ]; then
-		mv -f /res/sec43/* /
-		prepareKnox
-	else
-		mv -f /res/aosp43/* /
-	fi
-elif [ "$ROM" == "3" ]; then
-	mount -t ext4 /dev/block/mmcblk0p19 /system
-	if [ -f /system/framework/twframework.jar ]; then
-		mv -f /res/sec43/* /
-		prepareKnox
-	else
-		mv -f /res/aosp43/* /
-	fi
-	mv -f /fstab.universal5410.2 /fstab.universal5410
-	mv -f /init.universal5410.rc.fourth /init.universal5410.rc
+[ "$ROM" == "0" ] && mount -t ext4 /dev/block/mmcblk0p20 /system
+[ "$ROM" == "1" ] && mount -t ext4 /data/media/.secondrom/system.img /system
+[ "$ROM" == "2" ] && mount -t ext4 /data/media/.thirdrom/system.img /system
+[ "$ROM" == "3" ] && mount -t ext4 /dev/block/mmcblk0p19 /system
+
+if [ -f /system/framework/twframework.jar ]; then
+    mv -f /res/sec43/* /
+    prepareKnox
+elif grep -q ro.build.version.sdk=19 /system/build.prop ; then
+    mv -f /res/aosp44/* /
 else
-	mv -f /res/aosp43/* /
-	mv -f /fstab.universal5410.2 /fstab.universal5410
-	if [ "$ROM" == "1" ]; then
-		mv -f /init.universal5410.rc.second /init.universal5410.rc
-	elif [ "$ROM" == "2" ]; then
-		mv -f /init.universal5410.rc.third /init.universal5410.rc
-	fi
+    mv -f /res/aosp43/* /
 fi
+
+[ "$ROM" == "0" ] || mv -f /fstab.universal5410.2 /fstab.universal5410
+[ "$ROM" == "1" ] && mv -f /init.universal5410.rc.second /init.universal5410.rc
+[ "$ROM" == "2" ] && mv -f /init.universal5410.rc.third /init.universal5410.rc
+[ "$ROM" == "3" ] && mv -f /init.universal5410.rc.fourth /init.universal5410.rc
 
 out

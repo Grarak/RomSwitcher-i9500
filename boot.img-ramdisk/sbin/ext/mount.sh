@@ -7,12 +7,7 @@ mkdir -p /.firstrom/media/0/romswitcher-tmp
 mount --bind /.firstrom/media/0/romswitcher-tmp /romswitcher
 
 mount -o remount,rw /system
-/sbin/busybox mount -t rootfs -o remount,rw rootfs
-
-mount -t tmpfs tmpfs /system/lib/modules
-
 chmod 755 /system
-ln -s /lib/modules/* /system/lib/modules/
 
 if [ "$ROM" == "secondary" ]; then
     mkdir -p /.firstrom/media/.secondrom/data/app
