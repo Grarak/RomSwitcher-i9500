@@ -9,7 +9,7 @@ build () {
     cd boot.img-ramdisk
     find . | cpio -o -H newc | gzip > ../ramdisk.gz
     cd ..
-    ./mkbootimg-$1 --kernel zImage --ramdisk ramdisk.gz --pagesize 2048 --cmdline "console=ttySAC2,115200n8 vmalloc=512M androidboot.console=ttySAC2" -o boot.img
+    ./mkbootimg-$1 --kernel zImage --ramdisk ramdisk.gz -o boot.img
 }
 
 if [ -e ~/.bash_profile ]; then

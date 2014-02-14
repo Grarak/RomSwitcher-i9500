@@ -40,5 +40,3 @@ case $((`cat /sys/devices/platform/sec-battery/power_supply/battery/batt_chargin
 	;;
 
 esac
-
-echo " "[$((`cat /sys/devices/platform/sec-battery/power_supply/battery/current_max`))mA/$((`cat /sys/devices/platform/sec-battery/power_supply/battery/current_avg`))mA/$((`cat /sys/devices/platform/sec-battery/power_supply/battery/current_now`))mA]

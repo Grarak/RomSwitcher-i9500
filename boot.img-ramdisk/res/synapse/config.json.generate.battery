@@ -7,15 +7,23 @@ cat << CTAG
 	{ SDescription:{ 
 		description:"Device charging currents are composed of input current coming into the device (Nominal 5V) and charge current fed to the battery (Battery Charge Voltage). Charger detection divides charging cable types into several categories as described below. If charging current exceeds input load, then charging current is dynamically adjusted. For avoiding battery deterioration, charging currents of less than 0.7 Coloumb are advised; ex. 2600mAh (Capacity) * 0.7C = ~1820mA."
 	}},
-	{ SButton:{
-		label:"Detect live charging source [Input/Charge/Now]",
-		action:"charge-source"
-	}},
+	{ SLiveLabel:{
+                  action:"charge-source"
+        }},
+	{ SLiveLabel:{
+                  action:"echo \"Input: \$(cat /sys/devices/platform/sec-battery/power_supply/battery/current_max)mA\""
+        }},
+	{ SLiveLabel:{
+                  action:"echo \"Average: \$(cat /sys/devices/platform/sec-battery/power_supply/battery/current_avg)mA\""
+        }},
+	{ SLiveLabel:{
+                  action:"echo \"Now: \$(cat /sys/devices/platform/sec-battery/power_supply/battery/current_now)mA\""
+        }},
+
 	{ SDescription:{ 
 		description:"Input is the live current limit coming through the USB port into the device at 5V. Charge is the desired target current to charge the battery. Now is the actual current limit applied to the battery."
 	}},
 	
-
 
 	{ SPane:{ 
 		title:"Charging logic",

@@ -63,7 +63,7 @@ fi
 
 mkdir -p /data/media/0/romswitcher-tmp
 if [ -e /data/media/0/romswitcher-tmp/manualboot ]; then
-    if [ -e /data/media/.nextboot ]; then
+	if [ -e /data/media/.nextboot ]; then
 		rm -f /data/media/.nextboot
 	else
 		mv -f /res/etc /
@@ -81,13 +81,18 @@ fi
 [ "$ROM" == "2" ] && mount -t ext4 /data/media/.thirdrom/system.img /system
 [ "$ROM" == "3" ] && mount -t ext4 /dev/block/mmcblk0p19 /system
 
+[ -e /system/build.prop ] || ROM=0
+
 if [ -f /system/framework/twframework.jar ]; then
-    mv -f /res/sec43/* /
-    prepareKnox
+	echo "0 0" > /proc/sys/kernel/runtime_dependency
+	prepareKnox
+	mv -f /res/sec43/* /
 elif grep -q ro.build.version.sdk=19 /system/build.prop ; then
-    mv -f /res/aosp44/* /
+	echo "2 0" > /proc/sys/kernel/runtime_dependency
+	insmod /lib/modules/dhd.ko
+	mv -f /res/aosp44/* /
 else
-    mv -f /res/aosp43/* /
+	mv -f /res/aosp43/* /
 fi
 
 [ "$ROM" == "0" ] || mv -f /fstab.universal5410.2 /fstab.universal5410
