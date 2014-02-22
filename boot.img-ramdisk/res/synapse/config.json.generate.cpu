@@ -12,7 +12,7 @@ cat << CTAG
         }},
 	{ STitleBar:{
 		title:"CPUFreq scaling"
-	}},
+	}},        
 	{ SLiveLabel:{
                   title:"CPU frequency",
                   description:"Current frequency and active cluster.",

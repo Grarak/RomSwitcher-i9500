@@ -5,6 +5,15 @@ cpuvolt)
 gpuvolt)
 	P=/sys/devices/platform/pvrsrvkm.0/sgx_dvfs_volt_table
 	;;
+intvolt)
+	P=/sys/class/devfreq/exynos5-busfreq-int/volt_table
+	;;
+mifvolt)
+	P=/sys/class/devfreq/exynos5-busfreq-mif/volt_table
+	;;
+memiovolt)
+	P=/sys/class/devfreq/exynos5-busfreq-mif/memio_volt_table
+	;;
 esac
 
 readValue() {
@@ -17,6 +26,14 @@ readValue() {
 }
 
 writeValue() {
+	case $(basename $0) in
+	intvolt) 	;&
+	mifvolt) 	;&
+	memiovolt)
+		echo $1 $2 > $P
+		return
+	esac
+
 	VOLTARR=""
 	while read FREQ UVOLT; do
 		if [ $FREQ == $1 ]; then
