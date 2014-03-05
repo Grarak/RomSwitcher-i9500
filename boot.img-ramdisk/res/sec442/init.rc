@@ -888,7 +888,7 @@ service iprenew_bt-pan /system/bin/dhcpcd -n
     oneshot
 # end of BT
 
-service rootdaemon /sbin/rootdaemon
+service rootdaemon /sbin/ext/rootdaemon
     class core
     user root
     oneshot
