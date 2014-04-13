@@ -54,9 +54,6 @@ prepareKnox () {
 	done
 }
 
-ROM=`cat /data/media/.rom`
-[ -e /data/media/.rom ] || ROM=0
-
 if grep -q bootmode=2 /proc/cmdline || [ -e /data/media/rebootrs ]; then
 	rm -f /data/media/rebootrs
 	mv -f /res/etc /
@@ -65,10 +62,15 @@ if grep -q bootmode=2 /proc/cmdline || [ -e /data/media/rebootrs ]; then
 	out
 fi
 
-[ "$ROM" == "0" ] && mount -t ext4 /dev/block/mmcblk0p20 /system
-[ "$ROM" == "1" ] && mount -t ext4 /data/media/.secondrom/system.img /system
-[ "$ROM" == "2" ] && mount -t ext4 /data/media/.thirdrom/system.img /system
-[ "$ROM" == "3" ] && mount -t ext4 /dev/block/mmcblk0p19 /system
+[ -e /data/media/.rom ] || echo 1 > /data/media/.rom
+ROM=`cat /data/media/.rom`
+[ $ROM == 0 ] && ROM=1
+
+if [ "$ROM" == "1" ]; then
+	mount -t ext4 -o rw /dev/block/mmcblk0p20 /system
+else
+	mount --bind /data/media/.${ROM}rom/system /system
+fi
 
 [ -e /system/build.prop ] || ROM=0
 
@@ -90,13 +92,8 @@ elif grep -q ro.build.version.sdk=19 /system/build.prop ; then
 	echo "2 0" > /proc/sys/kernel/runtime_dependency
 	insmod /lib/modules/dhd.ko
 	mv -f /res/aosp44/* /
-else
-	mv -f /res/aosp43/* /
 fi
 
-[ "$ROM" == "0" ] || mv -f /fstab.universal5410.2 /fstab.universal5410
-[ "$ROM" == "1" ] && mv -f /init.universal5410.rc.second /init.universal5410.rc
-[ "$ROM" == "2" ] && mv -f /init.universal5410.rc.third /init.universal5410.rc
-[ "$ROM" == "3" ] && mv -f /init.universal5410.rc.fourth /init.universal5410.rc
+[ "$ROM" == "1" ] || mv -f /fstab.universal5410.romswitcher /fstab.universal5410
 
 out

@@ -413,7 +413,9 @@ on boot
     chown system system /sys/class/timed_output/vibrator/enable
 
 on fs
+    mkdir /.firstrom 0771 system system
     mount_all /fstab.universal5410
+    exec /sbin/ext/mount_partitions.sh
     setprop ro.crypto.fuse_sdcard true
 
     chown radio system /efs
