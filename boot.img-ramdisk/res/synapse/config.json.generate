@@ -5,6 +5,7 @@ cat << CTAG
 {
     sections: [
 		`. /res/synapse/config.json.generate.cpu`,
+		`. /res/synapse/config.json.generate.governor`,
 		`. /res/synapse/config.json.generate.gpu`,
 		`. /res/synapse/config.json.generate.intmif`,
 		`. /res/synapse/config.json.generate.qos`,

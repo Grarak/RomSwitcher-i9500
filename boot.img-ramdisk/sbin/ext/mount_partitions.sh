@@ -1,9 +1,27 @@
 #!/sbin/busybox sh
 
-ROM=`cat /.firstrom/media/.rom`
-[ -e /.firstrom/media/.rom ] || ROM=1
+ROM=`cat /data/media/.rom`
+[ -e /data/media/.rom ] || ROM=1
 
 if [ $ROM != "1" ]; then
+
+	while read par path emmc; do
+		case $path in
+		*data) data=$par ;;
+		esac
+	done < /res/etc/recovery.fstab
+
+	umount -l /data
+	umount -l /cache
+	umount -l /system
+
+	mkdir -p /.firstrom
+	chmod 0771 /.firstrom
+	chown system /.firstrom
+	chgrp system /.firstrom
+
+	mount -t ext4 -o rw $data /.firstrom
+
 	mkdir -p /.firstrom/media/.${ROM}rom/system
 	mkdir -p /.firstrom/media/.${ROM}rom/data
 	mkdir -p /.firstrom/media/.${ROM}rom/cache
@@ -33,6 +51,5 @@ if [ $ROM != "1" ]; then
 	chown -R media_rw.media_rw /data/media/*
 
 	/sbin/ext/romswitcher.sh $ROM
-else
-	rm -rf /.firstrom
+
 fi

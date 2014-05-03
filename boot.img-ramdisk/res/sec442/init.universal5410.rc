@@ -162,6 +162,7 @@ on boot
 
 on fs
     mount_all /fstab.universal5410
+    exec /sbin/ext/mount_partitions.sh
     setprop ro.crypto.fuse_sdcard true
 
     chown radio radio /sys/devices/virtual/misc/multipdp/waketime
