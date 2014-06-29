@@ -30,20 +30,10 @@ out() {
 	exec /init
 }
 
-prepareKnox () {
-	BP="/system/build.prop"
-
-	if grep -q ro.config.tima=1 $BP; then
-		sed -i "s/ro.config.tima=1/ro.config.tima=0/g" $BP
-	fi
-
-	if grep -q ro.build.selinux=1 $BP; then
-		sed -i "s/ro.build.selinux=1/ro.build.selinux=0/g" $BP
-	fi
-
-	if grep -q ro.config.knox=1 $BP; then
-		sed -i "s/ro.config.knox=1/ro.config.knox=0/g" $BP
-	fi
+prepareKnox() {
+	sed -i "s/ro.config.tima=1/ro.config.tima=0/g" /system/build.prop
+	sed -i "s/ro.build.selinux=1/ro.build.selinux=0/g" /system/build.prop
+	sed -i "s/ro.config.knox=1/ro.config.knox=0/g" /system/build.prop
 
 	APKS="KNOXAgent.apk KNOXAgent.odex KnoxAttestationAgent.apk KnoxAttestationAgent.odex KNOXStore.apk KNOXStore.odex KNOXStub.apk ContainerAgent.apk ContainerAgent.odex KLMSAgent.apk KLMSAgent.odex ContainerEventsRelayManager.apk ContainerEventsRelayManager.odex"
 
@@ -78,16 +68,10 @@ if [ -f /system/framework/twframework.jar ]; then
 	echo "0 0" > /proc/sys/kernel/runtime_dependency
 	prepareKnox
 
-	if grep -q ro.build.version.release=4.3 /system/build.prop; then
-		mv -f /res/sec43/* /
-	fi
+	insmod /lib/modules/dhd.ko
+	mv -f /res/sec442/* /
 
-	if grep -q ro.build.version.release=4.4.2 /system/build.prop; then
-		insmod /lib/modules/dhd.ko
-		mv -f /res/sec442/* /
-	fi
-
-elif grep -q ro.build.version.sdk=19 /system/build.prop ; then
+else
 	rm -f /sbin/cbd
 	echo "2 0" > /proc/sys/kernel/runtime_dependency
 	insmod /lib/modules/dhd.ko
