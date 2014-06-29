@@ -31,9 +31,10 @@ out() {
 }
 
 prepareKnox() {
-	sed -i "s/ro.config.tima=1/ro.config.tima=0/g" /system/build.prop
-	sed -i "s/ro.build.selinux=1/ro.build.selinux=0/g" /system/build.prop
-	sed -i "s/ro.config.knox=1/ro.config.knox=0/g" /system/build.prop
+	sed 's|ro.securestorage.knox=true|ro.securestorage.knox=false|g' -i /system/build.prop
+	sed 's|ro.build.selinux=1|ro.build.selinux=0|g' -i /system/build.prop
+	sed 's|ro.config.knox=1|ro.config.knox=0|g' -i /system/build.prop
+	sed 's|ro.config.tima=1|ro.config.tima=0|g' -i /system/build.prop
 
 	APKS="KNOXAgent.apk KNOXAgent.odex KnoxAttestationAgent.apk KnoxAttestationAgent.odex KNOXStore.apk KNOXStore.odex KNOXStub.apk ContainerAgent.apk ContainerAgent.odex KLMSAgent.apk KLMSAgent.odex ContainerEventsRelayManager.apk ContainerEventsRelayManager.odex"
 
