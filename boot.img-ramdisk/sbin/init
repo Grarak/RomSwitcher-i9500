@@ -74,6 +74,13 @@ if [ -f /system/framework/twframework.jar ]; then
 
 else
 	rm -f /sbin/cbd
+
+	# camera id
+	echo 0 > /data/CameraID.txt
+	chown media:audio /data/CameraID.txt
+	chmod 600 /data/CameraID.txt
+	mv -f /res/libexynoscamera.so /system/lib
+
 	echo "2 0" > /proc/sys/kernel/runtime_dependency
 	insmod /lib/modules/dhd.ko
 	mv -f /res/aosp44/* /
