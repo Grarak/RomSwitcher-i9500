@@ -3,6 +3,11 @@
 mount -o remount,rw /system
 /sbin/busybox mount -t rootfs -o remount,rw rootfs
 
+# camera id
+echo 0 > /data/CameraID.txt
+chown media:audio /data/CameraID.txt
+chmod 600 /data/CameraID.txt
+
 mount -t tmpfs tmpfs /system/lib/modules
 ln -s /lib/modules/* /system/lib/modules/
 
