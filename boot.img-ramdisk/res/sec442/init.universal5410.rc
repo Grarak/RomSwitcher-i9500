@@ -162,7 +162,7 @@ on boot
 
 on fs
     mount_all /fstab.universal5410
-    exec /sbin/ext/mount_partitions.sh
+    exec /scripts/mount_partitions.sh
     setprop ro.crypto.fuse_sdcard true
 
     chown radio radio /sys/devices/virtual/misc/multipdp/waketime
@@ -256,27 +256,27 @@ on fs
     chown system radio /sys/class/camera/front/front_camtype
 
 # SVC LED
-	chown system system /sys/class/sec/led/led_r
-	chown system system /sys/class/sec/led/led_g
-	chown system system /sys/class/sec/led/led_b
+    chown system system /sys/class/sec/led/led_r
+    chown system system /sys/class/sec/led/led_g
+    chown system system /sys/class/sec/led/led_b
 
-	chown system system /sys/class/leds/led_r/brightness
-	chown system system /sys/class/leds/led_g/brightness
-	chown system system /sys/class/leds/led_b/brightness
-	chown system system /sys/class/leds/led_r/delay_on
-	chown system system /sys/class/leds/led_g/delay_on
-	chown system system /sys/class/leds/led_b/delay_on
-	chown system system /sys/class/leds/led_r/delay_off
-	chown system system /sys/class/leds/led_g/delay_off
-	chown system system /sys/class/leds/led_b/delay_off
-	chown system system /sys/class/leds/led_r/blink
-	chown system system /sys/class/leds/led_g/blink
-	chown system system /sys/class/leds/led_b/blink
+    chown system system /sys/class/leds/led_r/brightness
+    chown system system /sys/class/leds/led_g/brightness
+    chown system system /sys/class/leds/led_b/brightness
+    chown system system /sys/class/leds/led_r/delay_on
+    chown system system /sys/class/leds/led_g/delay_on
+    chown system system /sys/class/leds/led_b/delay_on
+    chown system system /sys/class/leds/led_r/delay_off
+    chown system system /sys/class/leds/led_g/delay_off
+    chown system system /sys/class/leds/led_b/delay_off
+    chown system system /sys/class/leds/led_r/blink
+    chown system system /sys/class/leds/led_g/blink
+    chown system system /sys/class/leds/led_b/blink
 
-	chown system system /sys/class/sec/led/led_pattern
-	chown system system /sys/class/sec/led/led_blink
-	chown system system /sys/class/sec/led/led_br_lev
-	chown system system /sys/class/sec/led/led_lowpower
+    chown system system /sys/class/sec/led/led_pattern
+    chown system system /sys/class/sec/led/led_blink
+    chown system system /sys/class/sec/led/led_br_lev
+    chown system system /sys/class/sec/led/led_lowpower
 
 # Switch Device
     chown system radio /sys/class/sec/switch/otg_test
@@ -304,6 +304,28 @@ on fs
     chmod 0664 /sys/class/devfreq/exynos5-busfreq-mif/en_monitoring
     chmod 0664 /sys/class/devfreq/exynos5-busfreq-int/en_monitoring
 
+# SSRM
+    chown radio system /sys/class/lcd/panel/siop_enable
+    chown radio system /sys/class/graphics/fb0/lcdfreq/level
+    chown radio system /sys/devices/platform/pvrsrvkm.0/sgx_dvfs_min_lock
+    chown radio system /sys/devices/platform/pvrsrvkm.0/sgx_dvfs_max_lock
+    chown radio system /sys/devices/platform/pvrsrvkm.0/sgx_dvfs_table
+    chown radio system /sys/class/devfreq/exynos5-busfreq-mif/min_freq
+    chown radio system /sys/class/devfreq/exynos5-busfreq-mif/max_freq
+    chown radio system /sys/class/devfreq/exynos5-busfreq-mif/freq_table
+    chown radio system /sys/devices/system/cpu/cpufreq/ondemand/up_threshold_h
+    chown radio system /sys/devices/system/cpu/cpufreq/ondemand/game_mode
+    chmod 0660 /sys/class/lcd/panel/siop_enable
+    chmod 0660 /sys/class/graphics/fb0/lcdfreq/level
+    chmod 0660 /sys/devices/platform/pvrsrvkm.0/sgx_dvfs_min_lock
+    chmod 0660 /sys/devices/platform/pvrsrvkm.0/sgx_dvfs_max_lock
+    chmod 0660 /sys/devices/platform/pvrsrvkm.0/sgx_dvfs_table
+    chmod 0660 /sys/class/devfreq/exynos5-busfreq-mif/min_freq
+    chmod 0660 /sys/class/devfreq/exynos5-busfreq-mif/max_freq
+    chmod 0660 /sys/class/devfreq/exynos5-busfreq-mif/freq_table
+    chmod 0660 /sys/devices/system/cpu/cpufreq/ondemand/up_threshold_h
+    chmod 0660 /sys/devices/system/cpu/cpufreq/ondemand/game_mode
+
 # Ondemand
     chown radio system /sys/devices/system/cpu/cpufreq/ondemand/up_threshold_h
     chmod 0664 /sys/devices/system/cpu/cpufreq/ondemand/up_threshold_h
@@ -313,6 +335,18 @@ on fs
     chmod 0664 /sys/devices/system/cpu/cpufreq/ondemand/conservative_step
     chown radio system /sys/devices/system/cpu/cpufreq/ondemand/up_conservative_mode
     chmod 0664 /sys/devices/system/cpu/cpufreq/ondemand/up_conservative_mode
+    chown radio system /sys/devices/system/cpu/cpufreq/ondemand/sampling_rate
+    chmod 0664 /sys/devices/system/cpu/cpufreq/ondemand/sampling_rate
+    chown radio system /sys/devices/system/cpu/cpufreq/ondemand/up_threshold_l
+    chmod 0664 /sys/devices/system/cpu/cpufreq/ondemand/up_threshold_l
+    chown radio system /sys/devices/system/cpu/cpufreq/ondemand/up_step_level_l
+    chmod 0664 /sys/devices/system/cpu/cpufreq/ondemand/up_step_level_l
+    chown radio system /sys/devices/system/cpu/cpufreq/ondemand/up_threshold
+    chmod 0664 /sys/devices/system/cpu/cpufreq/ondemand/up_threshold
+    chown radio system /sys/devices/system/cpu/cpufreq/ondemand/up_step_level_b
+    chmod 0664 /sys/devices/system/cpu/cpufreq/ondemand/up_step_level_b
+    chown radio system /sys/devices/system/cpu/cpufreq/ondemand/sampling_down_factor
+    chmod 0664 /sys/devices/system/cpu/cpufreq/ondemand/sampling_down_factor
 
 # Core Control
     chown radio system /dev/b.L_operator
@@ -491,7 +525,7 @@ service watchdogd /sbin/watchdogd 10 20
     seclabel u:r:watchdogd:s0
     disabled
 
-service cpboot-daemon /sbin/cbd -d -txmm626 -bh -mh -p 13
+service cpboot-daemon /res/cbd -d -txmm626 -bh -mh -p 13
     class main
     user root
     group radio cache inet misc audio sdcard_rw log sdcard_r shell
@@ -524,11 +558,11 @@ service bugreport /system/bin/bugmailer.sh -v
     keycodes 114 115 116
 
 # bootchecker
-#service bootchecker /system/bin/bootchecker
-#    class late_start
-#    user system
-#    group system log
-#    oneshot
+service bootchecker /system/bin/bootchecker
+    class late_start
+    user system
+    group system log
+    oneshot
 
 on property:ro.dumpstate.dmesg=1
     write /proc/sys/kernel/dmesg_restrict 0
@@ -584,6 +618,12 @@ service playlpm /system/bin/lpm
     class sec-charger
     critical
 
+# To reduce power consumption when setupwizard is running
+on property:persist.sys.setupwizard=START
+    write /sys/power/cpufreq_max_limit 1000000
+
+on property:persist.sys.setupwizard=FINISH
+    write /sys/power/cpufreq_max_limit 1600000
 # SecEDS
 service TvoutService_C /system/bin/bintvoutservice
      class main

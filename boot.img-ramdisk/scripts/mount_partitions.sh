@@ -50,6 +50,6 @@ if [ $ROM != "1" ]; then
 	chown media_rw.media_rw /data/media
 	chown -R media_rw.media_rw /data/media/*
 
-	/sbin/ext/romswitcher.sh $ROM
+	/scripts/romswitcher.sh $ROM
 
 fi

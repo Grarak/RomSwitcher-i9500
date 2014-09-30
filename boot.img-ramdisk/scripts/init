@@ -50,6 +50,8 @@ if grep -q bootmode=2 /proc/cmdline || [ -e /data/media/rebootrs ]; then
 	mv -f /res/etc /
 	mv -f /res/aosp44/* /
 	mv -f /res/recovery/* /
+	rm -rf /scripts
+	rm -f /init.universal5410.rc
 	out
 fi
 
@@ -63,7 +65,7 @@ else
 	mount --bind /data/media/.${ROM}rom/system /system
 fi
 
-[ -e /system/build.prop ] || ROM=0
+[ -e /system/build.prop ] || ROM=1
 
 if [ -f /system/framework/twframework.jar ]; then
 	echo "0 0" > /proc/sys/kernel/runtime_dependency
@@ -72,6 +74,7 @@ if [ -f /system/framework/twframework.jar ]; then
 	insmod /lib/modules/dhd.ko
 	mv -f /res/sec442/* /
 
+	[ -f /system/framework/framework-miui-res.apk ] && rm -f init.miui.rc
 else
 	rm -f /sbin/cbd
 	mv -f /res/libexynoscamera.so /system/lib
