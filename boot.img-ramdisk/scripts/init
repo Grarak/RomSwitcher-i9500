@@ -74,7 +74,7 @@ if [ -f /system/framework/twframework.jar ]; then
 	insmod /lib/modules/dhd.ko
 	mv -f /res/sec442/* /
 
-	[ -f /system/framework/framework-miui-res.apk ] && rm -f init.miui.rc
+	[ -f /system/framework/framework-miui-res.apk ] || rm -f init.miui.rc
 else
 	rm -f /sbin/cbd
 	mv -f /res/libexynoscamera.so /system/lib

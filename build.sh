@@ -5,7 +5,7 @@ rm -rf ramdisk.gz
 find -name "*~" -exec rm -rf {} \;
 find -name ".DS_Store" -exec rm -rf {} \;
 
-VERSION=2.4
+VERSION=2.4.1
 
 echo $VERSION > boot.img-ramdisk/sbin/version
 

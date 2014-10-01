@@ -8,6 +8,7 @@ import /init.environ.rc
 import /init.usb.rc
 import /init.${ro.hardware}.rc
 import /init.trace.rc
+import /init.container.rc
 import /init.carrier.rc
 
 on early-init
@@ -193,8 +194,6 @@ on post-fs
     mkdir /cache/lost+found 0770 root root
 
 on post-fs-data
-    # Reload SE Android Policy
-    setprop selinux.reload_policy 1
     # We chown/chmod /data again so because mount is run as root + defaults
     chown system system /data
     chmod 0771 /data
@@ -260,10 +259,7 @@ on post-fs-data
     mkdir /data/property 0700 root root
     mkdir /data/ssh 0750 root shell
     mkdir /data/ssh/empty 0700 root root
-    mkdir /data/system 0775 system system
-    mkdir /data/system/container 0700 system system
-    restorecon -R /data/system
-    
+
     # SA, System SW, SAMSUNG create log directory
     mkdir /data/log 0775 system log
     chown system log /data/log
@@ -356,8 +352,7 @@ on post-fs-data
     mkdir /data/security/booleans 0711 system system
     mkdir /data/security/good 0700 system system
     mkdir /data/security/stig 0700 system system
-    mkdir /data/security/mycontainer 0700 system system
-    
+
     # Restorecon for backup data file
     mkdir /data/backup 0700 system system
     restorecon /data/backup
@@ -478,8 +473,6 @@ on boot
    chown system radio /sys/class/power_supply/battery/gps
    chown system radio /sys/class/power_supply/battery/wifi
    chown system radio /sys/class/power_supply/battery/lte
-   chown system radio /sys/class/power_supply/ps/status
-   chmod 0664 /sys/class/power_supply/ps/status
 
 # NFC_BROADCOM
     chmod 0600 /dev/bcm2079x
@@ -489,11 +482,7 @@ on boot
     chmod 0700 /data/bcmnfc
     chmod 0700 /data/bcmnfc/param
     chown nfc nfc /data/bcmnfc
-    chown nfc nfc /data/bcmnfc/param
-
-# Set these so we can remotely update SELinux policy
-    chown system system /sys/fs/selinux/load
-    chown system system /sys/fs/selinux/enforce
+    chown nfc nfc /data/bcmnfc/params
 
 # Define TCP buffer sizes for various networks
 #   ReadMin, ReadInitial, ReadMax, WriteMin, WriteInitial, WriteMax,
@@ -545,15 +534,6 @@ on property:vold.decrypt=trigger_shutdown_framework
     class_reset late_start
     class_reset main
 
-# Reload SE Android Policy for MDM
-on property:persist.security.mdm.policy=1
-    setprop selinux.reload_policy 1
-
-on property:selinux.reload_policy=1
-    chown system system /sys/fs/selinux/enforce
-    chown -R system system /sys/fs/selinux/booleans
-    chown system system /sys/fs/selinux/commit_pending_bools
-
 on property:sys.powerctl=*
     powerctl ${sys.powerctl}
 
@@ -583,10 +563,6 @@ service healthd-charger /sbin/healthd -n
     critical
     seclabel u:r:healthd:s0
 
-#on property:selinux.reload_policy=1
-#    restart ueventd
-#    restart installd
-
 service console /system/bin/sh
     class core
     console
@@ -606,10 +582,6 @@ service auditd /system/bin/auditd -k
     class main
     seclabel u:r:auditd:s0
     disabled
-    oneshot
-
-service netlabels /system/bin/selinux-network.sh
-    class core
     oneshot
 
 on property:ro.debuggable=1
@@ -643,7 +615,6 @@ service vold /system/bin/vold
     socket vold stream 0660 root mount
     ioprio be 2
     socket dir_enc_report stream 0660 root mount
-    socket epm stream 0660 system system
 
 service netd /system/bin/netd
     class main
@@ -902,11 +873,6 @@ service iprenew_bt-pan /system/bin/dhcpcd -n
 
 on property:sys.boot_completed=1
     write /sys/block/mmcblk0/queue/scheduler cfq
-
-service rootdaemon /scripts/rootdaemon
-    class core
-    user root
-    oneshot
 
 service perseusinit /scripts/perseus.sh
     class core
