@@ -1,19 +1,27 @@
 #!/sbin/sh
 
 BB="busybox"
-ROM=$1
+MOUNT="busybox mount"
+UMOUNT="busybox umount -l"
 
-if $BB grep -q /data /proc/mounts; then
-	system=/data/media/.${ROM}rom/system
+ROMPATH=$1
+
+[ -d /.firstdata ] && ROMPATH=`echo $ROMPATH | sed 's|/sdcard/.romswitcher|/.firstdata/media/.romswitcher|g'`
+
+if [ -d ${ROMPATH}system ]; then
+
+	rm -rf ${ROMPATH}system/*
+	rm -rf ${ROMPATH}system/.*
+
 else
-	system=/.firstrom/media/.${ROM}rom/system
+
+	$UMOUNT /system
+	$BB mkdir -p /system
+
+	$MOUNT -t ext4 -o rw ${ROMPATH}system.img /system || exit 1
+	$BB rm -rf /system/*
+	$BB rm -rf /system/.*
+
 fi
-
-$BB umount -l /system
-$BB mkdir -p /system
-
-$BB mount --bind $system /system || exit 1
-$BB rm -rf /system/*
-$BB rm -rf /system/.*
 
 exit 0

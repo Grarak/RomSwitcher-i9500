@@ -35,6 +35,21 @@ on init
 
     symlink /sys/devices/platform/s5p-ehci/ehci_power /dev/ehci_power
 
+on charger
+    # Disable extra CPUs
+    write /sys/devices/system/cpu/cpu1/online 0
+    write /sys/devices/system/cpu/cpu2/online 0
+    write /sys/devices/system/cpu/cpu3/online 0
+    chmod 444 /sys/devices/system/cpu/cpu1/online
+    chmod 444 /sys/devices/system/cpu/cpu2/online
+    chmod 444 /sys/devices/system/cpu/cpu3/online
+
+    # CPU Frequency Governor
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor powersave
+
+    # EHCI runtime enable for LPA
+    write /sys/devices/platform/s5p-ehci/power/control auto
+
 on fs
     mount_all /fstab.universal5410
     exec /scripts/mount.sh
@@ -50,7 +65,6 @@ on post-fs
 on post-fs-data
     mkdir /data/media 0770 media_rw media_rw
 
-    mkdir /data/misc/radio 0775 radio system
     mkdir /efs/imei 0775 radio system
 
 # create data/gps for GPS daemon
@@ -115,7 +129,7 @@ on boot
     chown system radio /sys/class/sec/sec_touchkey/flip_mode
 
 # Permissions for Touchkey
-    chown system radio /sys/class/sec/sec_touchkey/enable_disable
+    chown system radio /sys/class/sec/sec_touchkey/keypad_enable
     chown system radio /sys/class/sec/sec_touchkey/touchkey_brightness
     chown system radio /sys/class/sec/sec_touchkey/touchkey_menu
     chown system radio /sys/class/sec/sec_touchkey/touchkey_back
@@ -247,11 +261,6 @@ on boot
     chown system radio /sys/class/host_notify/usb_otg/booster
     chmod 0660 /sys/class/host_notify/usb_otg/booster
 
-# GPIO DVS
-    chown radio system /sys/class/secgpio_check/secgpio_check_all/gpioinit_check
-    chown radio system /sys/class/secgpio_check/secgpio_check_all/gpiosleep_check
-    chown radio system /sys/class/secgpio_check/secgpio_check_all/checked_sleepGPIO
-
 # PMS DVFS
     chown radio system /sys/power/cpufreq_table
     chown radio system /sys/power/cpufreq_max_limit
@@ -274,7 +283,7 @@ on boot
     chown radio system /sys/class/devfreq/exynos5-busfreq-mif/max_freq
     chown radio system /sys/class/devfreq/exynos5-busfreq-mif/freq_table
     chown radio system /sys/devices/system/cpu/cpufreq/ondemand/up_threshold_h
-    chown radio system /sys/devices/system/cpu/cpufreq/ondemand/game_mode
+    chown radio system /sys/devices/system/cpu/cpufreq/ondemand/boost_mode
     chmod 0660 /sys/class/lcd/panel/siop_enable
     chmod 0660 /sys/class/graphics/fb0/lcdfreq/level
     chmod 0660 /sys/devices/platform/pvrsrvkm.0/sgx_dvfs_min_lock
@@ -284,29 +293,7 @@ on boot
     chmod 0660 /sys/class/devfreq/exynos5-busfreq-mif/max_freq
     chmod 0660 /sys/class/devfreq/exynos5-busfreq-mif/freq_table
     chmod 0660 /sys/devices/system/cpu/cpufreq/ondemand/up_threshold_h
-    chmod 0660 /sys/devices/system/cpu/cpufreq/ondemand/game_mode
-
-# Ondemand
-    chown radio system /sys/devices/system/cpu/cpufreq/ondemand/up_threshold_h
-    chmod 0664 /sys/devices/system/cpu/cpufreq/ondemand/up_threshold_h
-    chown radio system /sys/devices/system/cpu/cpufreq/ondemand/high_freq_zone
-    chmod 0664 /sys/devices/system/cpu/cpufreq/ondemand/high_freq_zone
-    chown radio system /sys/devices/system/cpu/cpufreq/ondemand/conservative_step
-    chmod 0664 /sys/devices/system/cpu/cpufreq/ondemand/conservative_step
-    chown radio system /sys/devices/system/cpu/cpufreq/ondemand/up_conservative_mode
-    chmod 0664 /sys/devices/system/cpu/cpufreq/ondemand/up_conservative_mode
-    chown radio system /sys/devices/system/cpu/cpufreq/ondemand/sampling_rate
-    chmod 0664 /sys/devices/system/cpu/cpufreq/ondemand/sampling_rate
-    chown radio system /sys/devices/system/cpu/cpufreq/ondemand/up_threshold_l
-    chmod 0664 /sys/devices/system/cpu/cpufreq/ondemand/up_threshold_l
-    chown radio system /sys/devices/system/cpu/cpufreq/ondemand/up_step_level_l
-    chmod 0664 /sys/devices/system/cpu/cpufreq/ondemand/up_step_level_l
-    chown radio system /sys/devices/system/cpu/cpufreq/ondemand/up_threshold
-    chmod 0664 /sys/devices/system/cpu/cpufreq/ondemand/up_threshold
-    chown radio system /sys/devices/system/cpu/cpufreq/ondemand/up_step_level_b
-    chmod 0664 /sys/devices/system/cpu/cpufreq/ondemand/up_step_level_b
-    chown radio system /sys/devices/system/cpu/cpufreq/ondemand/sampling_down_factor
-    chmod 0664 /sys/devices/system/cpu/cpufreq/ondemand/sampling_down_factor
+    chmod 0660 /sys/devices/system/cpu/cpufreq/ondemand/boost_mode
 
 # Core Control
     chown radio system /sys/devices/system/cpu/cpu0/cpuidle/state1/disable
@@ -400,8 +387,6 @@ on boot
     chmod 0660 /dev/usb_mtp_gadget
     chown system system /dev/usb_mtp_gadget
 
-    chown system system /sys/class/timed_output/vibrator/enable
-
 # Vibrator
     chmod 0644 /sys/class/timed_output/vibrator/pwm_value
     chown system system /sys/class/timed_output/vibrator/pwm_value
@@ -415,17 +400,22 @@ on boot
     chown system system /sys/class/timed_output/vibrator/pwm_threshold
 
 # Torch
-    chown system camera /sys/class/leds/torch-sec1/brightness
-    chmod 0660 /sys/class/leds/torch-sec1/brightness
+    chown system system /sys/class/leds/torch-sec1/brightness
+    chmod 0667 /sys/class/leds/torch-sec1/brightness
 
 # Service begin here
+
+service charger /sbin/healthd -c
+    class charger
+    critical
+    seclabel u:r:healthd:s0
 
 # Set watchdog timer to 30 seconds and pet it every 10 seconds to get a 20 second margin
 service watchdogd /sbin/watchdogd 10 20
     class core
 
 # 3D init
-service pvrsrvctl /system/vendor/bin/pvrsrvctl --start --no-module
+service pvrsrvctl /system/bin/pvrsrvctl
     class core
     user root
     group root

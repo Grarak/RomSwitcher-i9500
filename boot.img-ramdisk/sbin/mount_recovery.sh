@@ -3,7 +3,7 @@
 BB="busybox"
 MOUNT="busybox mount"
 UMOUNT="busybox umount -l"
-ROM=$1
+ROMPATH=`echo $1 | sed 's|/sdcard/.romswitcher|/.firstdata/media/.romswitcher|g'`
 
 while read par path emmc; do
 	case $path in
@@ -13,45 +13,44 @@ while read par path emmc; do
 	esac
 done < /etc/recovery.fstab
 
-echo $SYSTEM
+$UMOUNT /system
+$UMOUNT /cache
+$UMOUNT /data/media
+$UMOUNT /data
+$UMOUNT /.firstdata
 
-if [ $ROM == "0" ]; then
+$BB mkdir -p /.firstdata
+$MOUNT -t ext4 -o rw $data /.firstdata
 
-	$UMOUNT /system
-	$UMOUNT /data/media
-	$UMOUNT /data
-	$UMOUNT /.firstrom
-	$UMOUNT /.firstcache
+$BB mkdir -p /data
+$BB mkdir -p /cache
+$BB mkdir -p /system
 
-	$BB mkdir -p /data
-	$BB mkdir -p /cache
-	$MOUNT -t ext4 -o rw $data /data
-	$MOUNT -t ext4 -o rw $cache /cache
+if [ -d ${ROMPATH}system ]; then
+
+	$BB mkdir -p ${ROMPATH}data
+	$BB mkdir -p ${ROMPATH}cache
+
+	$MOUNT --bind ${ROMPATH}data /data
+	$BB mkdir -p /data/media
+
+	$MOUNT --bind /.firstdata/media /data/media
+
+	$MOUNT --bind ${ROMPATH}cache /cache
+
+	$MOUNT --bind ${ROMPATH}system /system
+
 else
 
-	$UMOUNT /system
-	$UMOUNT /data
-	$UMOUNT /cache
-
-	$BB mkdir -p /.firstrom
-	$BB mkdir -p /.firstcache
-	$MOUNT -t ext4 -o rw $data /.firstrom
-	$MOUNT -t ext4 -o rw $cache /.firstcache
-
-	$BB mkdir -p /data
-	$BB mkdir -p /.firstrom/media/.${ROM}rom/data
-	$MOUNT --bind /.firstrom/media/.${ROM}rom/data /data
-
-	$BB mkdir -p /cache
-	$BB mkdir -p /.firstrom/media/.${ROM}rom/cache
-	$MOUNT --bind /.firstrom/media/.${ROM}rom/cache /cache
-
+	$MOUNT -t ext4 ${ROMPATH}data.img /data
 	$BB mkdir -p /data/media
-	$MOUNT --bind /.firstrom/media /data/media
 
-	$BB mkdir -p /system
-	$BB mkdir -p /.firstrom/media/.${ROM}rom/system
-	$MOUNT --bind /.firstrom/media/.${ROM}rom/system /system
+	$MOUNT --bind /.firstdata/media /data/media
+
+	$MOUNT -t ext4 ${ROMPATH}cache.img /cache
+
+	$MOUNT -t ext4 ${ROMPATH}system.img /system
+
 fi
 
 exit 0

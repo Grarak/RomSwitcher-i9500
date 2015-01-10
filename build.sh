@@ -5,10 +5,6 @@ rm -rf ramdisk.gz
 find -name "*~" -exec rm -rf {} \;
 find -name ".DS_Store" -exec rm -rf {} \;
 
-VERSION=2.4.1
-
-echo $VERSION > boot.img-ramdisk/sbin/version
-
 build () {
     cd boot.img-ramdisk
     find . | cpio -o -H newc | gzip > ../ramdisk.gz
