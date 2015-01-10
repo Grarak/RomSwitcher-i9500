@@ -1,5 +1,7 @@
 #!/sbin/busybox sh
 
+/sbin/busybox mount -t rootfs -o remount,rw rootfs
+
 # camera id
 echo 0 > /data/CameraID.txt
 chown media:audio /data/CameraID.txt
@@ -15,4 +17,9 @@ echo -0 > /sys/class/misc/wolfson_control/eq_sp_gain_5
 
 echo 1 > /sys/class/misc/wolfson_control/switch_eq_speaker
 
+ln -s /res/synapse/uci /sbin/uci
+/sbin/uci
+
 [ -d /system/etc/init.d ] && run-parts /system/etc/init.d
+
+/sbin/busybox mount -t rootfs -o remount,ro rootfs
