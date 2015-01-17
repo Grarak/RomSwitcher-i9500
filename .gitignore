@@ -3,4 +3,4 @@ kernel.zip
 ramdisk.gz
 boot.img
 .DS_Store
-boot.img-ramdisk/sbin/version
+boot.img-ramdisk/res/rs_version

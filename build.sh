@@ -1,9 +1,13 @@
 #!/bin/sh
 
+version=3.0
+
 rm -rf kernel.zip
 rm -rf ramdisk.gz
 find -name "*~" -exec rm -rf {} \;
 find -name ".DS_Store" -exec rm -rf {} \;
+
+echo $version > boot.img-ramdisk/res/rs_version
 
 build () {
     cd boot.img-ramdisk
