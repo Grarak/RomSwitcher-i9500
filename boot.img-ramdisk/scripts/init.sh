@@ -17,8 +17,6 @@ mknod /dev/block/mmcblk1p1 b 179 9
 mount -t ext4 /dev/block/mmcblk0p21 /data
 
 out() {
-	umount -f /external_sd
-	rm -rf /external_sd
 	umount -f /system
 	umount -f /data
 

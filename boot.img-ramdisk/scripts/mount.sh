@@ -1,15 +1,9 @@
 #!/sbin/busybox sh
 
+DATA="/dev/block/mmcblk0p21"
 ROM=`cat /data/media/.rom`
 
 if [ $ROM != "default" ]; then
-
-	while read par path emmc; do
-		case $path in
-		*data) data=$par ;;
-		esac
-	done < /res/etc/recovery.fstab
-
 	umount -l /data
 	umount -l /cache
 	umount -l /system
@@ -19,7 +13,7 @@ if [ $ROM != "default" ]; then
 	chown system /.firstdata
 	chgrp system /.firstdata
 
-	mount -t ext4 $data /.firstdata
+	mount -t ext4 $DATA /.firstdata
 
 	case $ROM in
 		/external_sd/*) TYPE=EXTERNAL ;;
@@ -47,8 +41,6 @@ if [ $ROM != "default" ]; then
 		mount --bind /.firstdata/media/.romswitcher/${ROM}/data /data
 		mount --bind /.firstdata/media/.romswitcher/${ROM}/cache /cache
 	elif [ $TYPE == "EXTERNAL" ]; then
-		mount /dev/block/mmcblk1p1 /storage/sdcard1
-		ROM=`echo $ROM | sed 's|/external_sd/.romswitcher|/extSdCard/.romswitcher|g'`
 		mount -t ext4 ${ROM}/system.img /system
 		mount -t ext4 ${ROM}/data.img /data
 		mount -t ext4 ${ROM}/cache.img /cache
@@ -62,5 +54,6 @@ if [ $ROM != "default" ]; then
 	chown media_rw.media_rw /data/media
 	chown -R media_rw.media_rw /data/media/*
 
-	#/scripts/rs.sh $ROM
+	mkdir -p /data/app
+	cp -rf /.firstdata/app/com.grarak.rom.switcher*.apk /data/app/
 fi
