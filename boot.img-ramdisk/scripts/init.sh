@@ -54,7 +54,7 @@ prepareKnox() {
 	done
 }
 
-# check if the device is in recovery mode
+# check if the device is in recovery mode or wants to boot into RomSwitcher Recovery
 # if yes then load RomSwitcher Recovery
 if grep -q "bootmode=2" /proc/cmdline || [ -e /data/media/.reboot_recovery ]; then
 	rm -f /data/media/.reboot_recovery
