@@ -9,8 +9,6 @@ mount -t sysfs sys /sys
 # create /dev/block
 mkdir -p /dev/block
 
-# cache
-mknod /dev/block/mmcblk0p19 b 259 11
 # system
 mknod /dev/block/mmcblk0p20 b 259 12
 # data
