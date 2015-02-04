@@ -1,13 +1,19 @@
 #!/sbin/busybox sh
 
+# define data partition
 DATA="/dev/block/mmcblk0p21"
+
+# read what ROM we should boot
 ROM=`cat /data/media/.rom`
 
 if [ $ROM != "default" ]; then
+	# not default ROM
+	# unmount all partitions
 	umount -l /data
 	umount -l /cache
 	umount -l /system
 
+	# mount data as .firstdata
 	mkdir -p /.firstdata
 	chmod 0771 /.firstdata
 	chown system /.firstdata
@@ -21,6 +27,7 @@ if [ $ROM != "default" ]; then
 	esac
 
 	if [ $TYPE == "INTERNAL" ]; then
+		# if ROM is in internal storage bind it as folder
 		mkdir -p /.firstdata/media/.romswitcher/${ROM}/system
 		mkdir -p /.firstdata/media/.romswitcher/${ROM}/data
 		mkdir -p /.firstdata/media/.romswitcher/${ROM}/cache
@@ -41,11 +48,13 @@ if [ $ROM != "default" ]; then
 		mount --bind /.firstdata/media/.romswitcher/${ROM}/data /data
 		mount --bind /.firstdata/media/.romswitcher/${ROM}/cache /cache
 	elif [ $TYPE == "EXTERNAL" ]; then
+		# if ROM is in external storage mount it as image
 		mount -t ext4 ${ROM}/system.img /system
 		mount -t ext4 ${ROM}/data.img /data
 		mount -t ext4 ${ROM}/cache.img /cache
 	fi
 
+	# setup internal storage for sub ROM
 	mkdir -p /data/media
 	mount --bind /.firstdata/media /data/media
 
@@ -54,6 +63,7 @@ if [ $ROM != "default" ]; then
 	chown media_rw.media_rw /data/media
 	chown -R media_rw.media_rw /data/media/*
 
+	# copy RomSwitcher Application
 	mkdir -p /data/app
 	cp -rf /.firstdata/app/com.grarak.rom.switcher*.apk /data/app/
 fi
