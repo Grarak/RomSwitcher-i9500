@@ -1,6 +1,6 @@
 #!/bin/sh
 
-version=3.0
+version=3.1
 
 rm -rf kernel.zip
 rm -rf ramdisk.gz
