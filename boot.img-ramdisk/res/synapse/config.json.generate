@@ -9,6 +9,7 @@ cat << CTAG
 		`. /res/synapse/config.json.generate.screen`,
 		`. /res/synapse/config.json.generate.audio`,
 		`. /res/synapse/config.json.generate.battery`,
+		`. /res/synapse/config.json.generate.led`,
 		`. /res/synapse/config.json.generate.io`
     ]
 }

@@ -91,6 +91,7 @@ fi
 
 # move RAM disks
 if [ -e /system/framework/twframework.jar ]; then
+	echo "0 0" > /proc/sys/kernel/runtime_dependency
 	# use TouchWiz RAM disk
 	prepareKnox
 	mv -f /res/cbd /sbin/
@@ -99,8 +100,8 @@ if [ -e /system/framework/twframework.jar ]; then
 	# check if device is trying to boot MIUI ROM
 	[ -e /system/framework/framework-miui-res.apk ] || rm -f init.miui.rc
 else
+	echo "2 0" > /proc/sys/kernel/runtime_dependency
 	# use AOSP RAM disk
-	
 	# remove cbd
 	# AOSP has it already in system
 	rm -f /res/cbd
